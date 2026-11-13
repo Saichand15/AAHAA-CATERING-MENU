@@ -1,0 +1,1621 @@
+{
+  "source": "https://aahaamenumanager.netlify.app/script.js",
+  "source_sha256": "4ce37642dbd11a9f8833ced849a5ecf87f10f6ec1c6a124cc9a6dc14ead67b9c",
+  "sections": [
+    {
+      "name": "Soups",
+      "items": [
+        {
+          "name": "Mutton Pepper Soup",
+          "desc": "Pepper seasoned broth with tender mutton pieces.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Pepper Soup",
+          "desc": "Pepper seasoned broth with tender chicken pieces.",
+          "price": "$9.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Cream of Mushroom Soup",
+          "desc": "Creamy mushroom soup with earthy mushroom notes.",
+          "price": "$7.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Hot & Sour Soup Veg/Chicken",
+          "desc": "Tangy, spicy broth with a balanced blend of flavors.",
+          "price": "$7.99 | $8.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        },
+        {
+          "name": "Lentil (Mulligatawny) Soup",
+          "desc": "Spiced lentil soup with warm herbal notes.",
+          "price": "$7.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Manchow Soup Veg/Chicken",
+          "desc": "Spicy soup topped with crispy fried noodles.",
+          "price": "$7.99 | $8.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        },
+        {
+          "name": "Sweet Corn Veg/Chicken",
+          "desc": "A light, comforting soup with delicate sweetness.",
+          "price": "$7.99 | $8.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        }
+      ]
+    },
+    {
+      "name": "Snacks and Chaat",
+      "items": [
+        {
+          "name": "Egg Bonda (2 pcs)",
+          "desc": "Hard boiled eggs coated in spiced batter.",
+          "price": "$6.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Medu Vada (3 pcs)",
+          "desc": "Crispy lentil fritters with a savory center.",
+          "price": "$12.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Sambar Vada (3 pcs)",
+          "desc": "Crispy vadas soaked in tangy sambar.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Stuffed Mirchi Bhaji (3 pcs)",
+          "desc": "Crispy green chilies stuffed with spiced filling.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Mix Vegetable Pakoras",
+          "desc": "Crisp assorted vegetables dipped in chickpea batter.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Onion Pakora Chennai Style",
+          "desc": "Crispy fried onion slices with aromatic spices.",
+          "price": "$9.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Snacks and Chaat",
+      "items": [
+        {
+          "name": "Punjabi Samosa (2 pcs)",
+          "desc": "Crispy samosas filled with spiced potatoes.",
+          "price": "$3.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Potato Bonda (3 pcs)",
+          "desc": "Crispy potato fritters with a spiced filling.",
+          "price": "$10.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Masala (Dhal) Vada (3 pcs)",
+          "desc": "Crispy lentil fritters with spices and herbs.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Aloo/Avocado Papdi Chaat",
+          "desc": "Crispy lentil crackers with aromatic toppings.",
+          "price": "$9.99 | $10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Dahi Papdi Chaat",
+          "desc": "Crispy papdi topped with yogurt and chutneys.",
+          "price": "$11.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Aloo Tikki Chaat",
+          "desc": "Crispy potato patties topped with chickpea curry.",
+          "price": "$11.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Bhel Puri",
+          "desc": "Puffed rice mixed with sev and chutneys.",
+          "price": "$11.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Pani Puri (6 pcs)",
+          "desc": "Crispy puris filled with tangy mint water.",
+          "price": "$8.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Dahi Puri (6 pcs)",
+          "desc": "Crispy puris topped with yogurt and chutneys.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Samosa Chaat",
+          "desc": "Crushed samosas topped with chickpea curry.",
+          "price": "$11.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Appetizers - Non Veg",
+      "items": [
+        {
+          "name": "Apollo Fish",
+          "desc": "Crispy fish tossed in a spicy yogurt marinade.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken 555",
+          "desc": "Crispy chicken tossed in creamy garlic sauce.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Curry Leaf Chicken Fry",
+          "desc": "Chicken deep fried with curry leaves and spices.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Curry Leaf Shrimp",
+          "desc": "Shrimp tossed with curry leaves and spices.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chennai Chicken Pakoda",
+          "desc": "Crispy spiced chicken bites with aromatic seasoning.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Fish Tawa Fry (4 pcs)",
+          "desc": "Griddle fried fish fillets with coastal spices.",
+          "price": "$20.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Goat Chukka",
+          "desc": "Tender goat roasted with bold spices and herbs.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Chukka",
+          "desc": "Chicken roasted with spices and aromatic herbs.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Mutton Ghee Roast",
+          "desc": "Mutton roasted in ghee with bold spices.",
+          "price": "$19.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Chicken Ghee Roast",
+          "desc": "Chicken roasted in ghee with aromatic spices.",
+          "price": "$16.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Nalla Karam Shrimp",
+          "desc": "Shrimp tossed in fiery roasted podi.",
+          "price": "$19.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Pepper Chicken Dry",
+          "desc": "Boneless chicken dry tossed in black pepper.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Shrimp 65",
+          "desc": "Crispy fried shrimp marinated in spices.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Fish 65",
+          "desc": "Crispy fish tossed in South Indian masala.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Appetizers - Veg",
+      "items": [
+        {
+          "name": "Chili Paneer",
+          "desc": "Crispy paneer tossed in chili sauce and onions.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Curry Leaf Gobi",
+          "desc": "Crispy curry leaf fried cauliflower with spices.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Gobi 555",
+          "desc": "Crispy cauliflower tossed in spiced fusion glaze.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Gobi Manchurian",
+          "desc": "Crispy cauliflower fritters tossed in garlic sauce.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Mushroom Pepper Fry",
+          "desc": "Mushrooms sautéed with black pepper and spices.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Nalla Karam Impossible",
+          "desc": "Impossible meat tossed in intense, spicy podi.",
+          "price": "$16.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paneer 65",
+          "desc": "Crispy paneer cubes tossed in spicy masala.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Impossible 65",
+          "desc": "Crispy plant based bites tossed in Indian spices.",
+          "price": "$16.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Gobi 65",
+          "desc": "Crispy cauliflower florets tossed in Indian spices.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Appetizers - Veg",
+      "items": [
+        {
+          "name": "Baby Corn 65",
+          "desc": "Crispy baby corn tossed with spices.",
+          "price": "$14.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paneer Manchurian",
+          "desc": "Paneer tossed in a tangy Manchurian sauce.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Veggie Manchurian",
+          "desc": "Vegetable dumplings tossed in Manchurian sauce.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Babycorn Manchurian",
+          "desc": "Crispy baby corn coated in Manchurian sauce.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Chilli Babycorn",
+          "desc": "Crispy baby corn tossed with chilies and peppers.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Curries - Non Veg",
+      "items": [
+        {
+          "name": "Butter Chicken",
+          "desc": "Tandoori chicken simmered in velvety tomato butter gravy.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Chettinad",
+          "desc": "Chicken simmered with poppy seeds and coconut.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Chilli Masala",
+          "desc": "Chicken cooked in spicy chili gravy.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Tikka Masala",
+          "desc": "Roasted chicken in creamy tomato masala sauce.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken Vindaloo",
+          "desc": "Fiery Goan curry with malt vinegar.",
+          "price": "$16.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Goat Chilli Masala",
+          "desc": "Tender goat in fiery chili gravy.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Gongura Goat Curry",
+          "desc": "Tender goat simmered with sorrel leaves.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Gongura Shrimp Curry",
+          "desc": "Juicy shrimp cooked in sorrel gravy.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Curries - Non Veg",
+      "items": [
+        {
+          "name": "Andhra Chicken/Goat Curry",
+          "desc": "Spicy Andhra style chicken or goat curry.",
+          "price": "$16.99 | $19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Hyderabadi Chicken/Goat Curry",
+          "desc": "Spiced Hyderabadi style chicken or goat curry.",
+          "price": "$16.99 | $19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Kadai Chicken/Goat (no lamb)",
+          "desc": "Meat cooked with aromatic Indian spices.",
+          "price": "$16.99 | $19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Aahaa Spicy Chicken Curry",
+          "desc": "Chef's special house-blend spiced chicken curry.",
+          "price": "$16.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Aahaa Spicy Goat Curry",
+          "desc": "Tender goat simmered in a signature spice blend.",
+          "price": "$18.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Lamb Chettinad",
+          "desc": "Tender lamb with coconut and fennel.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Lamb Chilli Masala",
+          "desc": "Tender lamb in spicy green chilies.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Lamb Rogan Josh",
+          "desc": "Tender lamb simmered with Kashmiri spices.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Lamb Saag",
+          "desc": "Tender lamb simmered in rich spinach curry.",
+          "price": "$19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Madras Fish Curry",
+          "desc": "Fish cooked in tangy, spicy South Indian curry.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Goan Shrimp / Fish Curry",
+          "desc": "Coastal curry with coconut and tangy spices.",
+          "price": "$16.99 | $19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Malabar Fish Curry",
+          "desc": "Fish in creamy coconut curry with Malabar spices.",
+          "price": "$19.99",
+          "spice": "🌶",
+          "veg": false
+        },
+        {
+          "name": "Mango Fish Curry",
+          "desc": "Fish simmered with raw mango and coconut.",
+          "price": "$19.99",
+          "spice": "🌶",
+          "veg": false
+        },
+        {
+          "name": "Chicken/Goat Kurma",
+          "desc": "Chicken or goat cooked in creamy kurma gravy.",
+          "price": "$16.99 | $19.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Chicken/Goat Rogan Josh",
+          "desc": "Chicken or goat in aromatic Kashmiri gravy.",
+          "price": "$14.99 | $18.99",
+          "spice": "",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Curries - Non Veg",
+      "items": [
+        {
+          "name": "Chicken/Mutton Saag",
+          "desc": "Chicken or mutton cooked in spinach gravy.",
+          "price": "$16.99 | $19.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Pepper Chicken Masala",
+          "desc": "Chicken cooked in black pepper gravy.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chennai Shrimp Masala",
+          "desc": "Shrimp tossed in spicy Chennai style masala.",
+          "price": "$17.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Shrimp Tikka Masala",
+          "desc": "Tandoori shrimp in creamy tomato curry.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Curries - Veg",
+      "items": [
+        {
+          "name": "Aloo Gobi",
+          "desc": "Potatoes and cauliflower cooked with spices.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Baingan Bharta",
+          "desc": "Smoky eggplant mashed with aromatic spices.",
+          "price": "$14.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Jeera Aloo",
+          "desc": "Potatoes tossed with cumin seeds.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Kadai Paneer",
+          "desc": "Paneer with peppers and aromatic spices.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Malai Kofta",
+          "desc": "Cheese dumplings in rich cashew sauce.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Mutter Paneer",
+          "desc": "Paneer and peas in creamy gravy.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Navaratan Korma",
+          "desc": "Nine vegetables in velvety cashew sauce.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Palak Paneer",
+          "desc": "Paneer cooked in creamy spinach gravy.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Curries - Veg",
+      "items": [
+        {
+          "name": "Paneer Bhurji",
+          "desc": "Buttery scrambled paneer with aromatic spices.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Paneer Makhani",
+          "desc": "Buttery tomato paneer in creamy sauce.",
+          "price": "$15.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Paneer Tikka Masala",
+          "desc": "Paneer tikka simmered in spiced tomato gravy.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Sambar",
+          "desc": "Traditional lentil stew with mixed vegetables.",
+          "price": "$9.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Shahi Paneer",
+          "desc": "Paneer in royal cashew makhani cream.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Palak Dal",
+          "desc": "Tempered yellow lentils with spinach.",
+          "price": "$13.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Vegetable Chettinad",
+          "desc": "Garden vegetables in spicy coconut curry.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Veggie Jalfrezi",
+          "desc": "Stir fried vegetables in tangy tomato sauce.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Yellow Dal Tadka",
+          "desc": "Tempered yellow lentils with aromatic spices.",
+          "price": "$12.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Veg Korma",
+          "desc": "Vegetables in mild almond coconut cream sauce.",
+          "price": "$14.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Impossible Kheema Masala",
+          "desc": "Plant based kheema in spicy masala gravy.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Rotu Kadai Salna",
+          "desc": "South Indian street style salna with spices.",
+          "price": "$12.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Egg Curry",
+          "desc": "Boiled eggs simmered in spiced gravy.",
+          "price": "$14.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Channa Masala",
+          "desc": "Chickpeas simmered in tomato onion gravy.",
+          "price": "$12.99",
+          "spice": "🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Indo-Chinese",
+      "items": [
+        {
+          "name": "Chicken Fried Rice",
+          "desc": "Wok fried rice tossed with tender chicken pieces.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Shrimp Fried Rice",
+          "desc": "Stir fried rice with shrimp and vegetables.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Mixed Fried Rice",
+          "desc": "Rice stir fried with chicken, shrimp, and egg.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Impossible Biryani",
+          "desc": "Flavorful biryani with rich spices.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Schezwan Fried Rice (Veg/Egg/Chicken)",
+          "desc": "Stir fried rice tossed in spicy Schezwan sauce.",
+          "price": "$14.99 | $15.99 | $16.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        },
+        {
+          "name": "Veg Fried Rice",
+          "desc": "Wok tossed rice with crisp vegetables and seasonings.",
+          "price": "$12.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Paneer Fried Rice",
+          "desc": "Wok fried rice with paneer and vegetables.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Noodles",
+      "items": [
+        {
+          "name": "Chicken Noodles",
+          "desc": "Noodles stir fried with chicken and seasonings.",
+          "price": "$15.99",
+          "spice": "🌶🌶",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Tiffin Corner",
+      "items": [
+        {
+          "name": "Ghee Idly",
+          "desc": "Soft steamed idlies finished with clarified ghee.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Idly (3 pcs)",
+          "desc": "Steamed rice and lentil cakes served soft.",
+          "price": "$8.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Tiffin Corner",
+      "items": [
+        {
+          "name": "Mini Podi Idly",
+          "desc": "Mini idlies tossed with aromatic spiced lentil powder.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Podi Idly",
+          "desc": "Steamed idlies tossed with spiced lentil powder.",
+          "price": "$12.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Poori (2 pcs)",
+          "desc": "Deep fried wheat breads served with potato masala.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Thattu Idly",
+          "desc": "Large, soft steamed idly served with chutneys.",
+          "price": "$10.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Ghee Thattu Idly",
+          "desc": "Large idly topped with ghee and spiced podi.",
+          "price": "$11.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Ghee Podi Thattu Idly",
+          "desc": "Soft steamed idlies coated with flavorful, spicy podi.",
+          "price": "$12.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Ghee Thattu Idly (2 pc)",
+          "desc": "Soft, fluffy idlis drizzled with aromatic ghee.",
+          "price": "$11.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Sambar Idly",
+          "desc": "Soft steamed idlies soaked in warm sambar.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Chole Bhatura",
+          "desc": "Fluffy fried bread served with spiced chickpeas.",
+          "price": "$14.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Butter Dosa",
+          "desc": "Crisp dosa roasted with butter until golden.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Butter Masala Dosa",
+          "desc": "Butter roasted dosa filled with seasoned potato masala.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Chettinad Dosa",
+          "desc": "Dosa prepared with aromatic Chettinad spices.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Egg Dosa",
+          "desc": "Dosa topped with egg and seasoned spices.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Masala Dosa",
+          "desc": "Crisp dosa filled with seasoned potato masala.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Mix Veg Uttappam",
+          "desc": "Savory uttappam topped with fresh vegetables and spices.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Tiffin Corner",
+      "items": [
+        {
+          "name": "Mysore Dosa",
+          "desc": "Crisp dosa spread with spicy Mysore chutney.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Onion Dosa",
+          "desc": "Crisp dosa topped with finely chopped onions.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Onion Rava Dosa",
+          "desc": "Crispy semolina crepe topped with chopped onions.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paneer Dosa",
+          "desc": "Crisp dosa filled with seasoned paneer.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paper Dosa",
+          "desc": "Extra thin, crisp dosa served without filling.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paper Masala Dosa",
+          "desc": "Extra thin, crisp dosa filled with potato masala.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Plain Dosa",
+          "desc": "Thin, crisp rice and lentil crepe.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Podi Dosa",
+          "desc": "Crisp dosa sprinkled with spiced lentil powder.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Rava Masala Dosa",
+          "desc": "Crispy semolina crepe filled with potato masala.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Special Masala Dosa",
+          "desc": "Crisp dosa with the house's special masala filling.",
+          "price": "$15.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Spinach Masala Dosa",
+          "desc": "Dosa filled with potato masala and spinach.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Ghee Roast",
+          "desc": "Crisp dosa roasted generously with clarified butter.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Adai",
+          "desc": "Thick lentil crepe with rice and spices.",
+          "price": "$11.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Tiffin Corner",
+      "items": [
+        {
+          "name": "Kavuni Dosa",
+          "desc": "Dosa prepared with traditional black rice.",
+          "price": "$15.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Mapillai Samba Dosa",
+          "desc": "Dosa prepared with traditional Mapillai Samba rice.",
+          "price": "$15.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Pesarattu",
+          "desc": "Green gram crepe with a savory finish.",
+          "price": "$14.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Uthappam",
+      "items": [
+        {
+          "name": "Onion Uttappam",
+          "desc": "Soft rice pancake topped with chopped onions.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Onion Podi Uthappam",
+          "desc": "Onion topped pancake sprinkled with spiced podi.",
+          "price": "$13.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Mix Veg Uthappam",
+          "desc": "Soft rice pancake topped with mixed vegetables.",
+          "price": "$13.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Tandoor",
+      "items": [
+        {
+          "name": "Chicken Achari Tikka",
+          "desc": "Chicken skewers marinated with tangy pickling spices.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Chicken Haryali Tikka",
+          "desc": "Chicken skewers in mint coriander green marinade.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Chicken Sheekh Kabab",
+          "desc": "Minced spiced chicken skewers char grilled until golden.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Chicken Tikka Lasuni",
+          "desc": "Chicken tikka roasted with aromatic garlic marinade.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Tandoor",
+      "items": [
+        {
+          "name": "Fish Tikka (Mahi Mahi)",
+          "desc": "Mahi mahi steaks roasted with aromatic ajwain.",
+          "price": "$20.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Lamb Sheekh Kabab",
+          "desc": "Minced spiced lamb skewers char grilled until succulent.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Malai Chicken Tikka",
+          "desc": "Chicken marinated in a creamy malai marinade.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Tandoori Chicken (4 pcs / 8 pcs)",
+          "desc": "Tandoor roasted chicken with aromatic Indian spices.",
+          "price": "$18.99 | $24.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Tandoori Shrimp",
+          "desc": "King prawns marinated and cooked in a clay oven.",
+          "price": "$20.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Tandoori Vegetables",
+          "desc": "Marinated vegetables charred in a traditional clay oven.",
+          "price": "$15.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Tandoori Pomfret",
+          "desc": "Spiced pomfret grilled to achieve a smoky finish.",
+          "price": "$25.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Paneer Tikka",
+          "desc": "Spiced paneer grilled to achieve a golden finish.",
+          "price": "$16.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Tandoor Mix Grill",
+          "desc": "Tandoor grilled meats and paneer served together.",
+          "price": "$29.99",
+          "spice": "",
+          "veg": "both"
+        },
+        {
+          "name": "Hariyali Paneer Tikka",
+          "desc": "Mint marinated paneer grilled until lightly charred.",
+          "price": "$18.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Aloo Paratha",
+          "desc": "Golden wheat flatbread stuffed with spiced potatoes.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Bread Basket",
+          "desc": "Assorted freshly baked Indian breads for sharing.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Bullet Naan",
+          "desc": "Classic clay oven baked naan with a golden finish.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Butter Roti",
+          "desc": "Clay oven baked whole wheat flatbread brushed with butter.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Naan",
+      "items": [
+        {
+          "name": "Cauliflower Naan",
+          "desc": "Golden naan stuffed with spiced cauliflower filling.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Garlic Naan",
+          "desc": "Golden naan topped with fragrant garlic.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Lamb Keema Naan",
+          "desc": "Naan stuffed with spiced minced lamb.",
+          "price": "$6.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Onion Kulcha",
+          "desc": "Golden baked flatbread stuffed with spiced onions.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Paneer Naan",
+          "desc": "Soft naan stuffed with flavorful spiced paneer filling.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Peshwari Naan",
+          "desc": "Soft naan stuffed with coconut and dried fruits.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Plain Naan",
+          "desc": "Classic clay oven baked leavened flatbread.",
+          "price": "$3.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Sesame Naan",
+          "desc": "Flatbread dotted with toasted sesame seeds.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Tandoori Roti",
+          "desc": "Whole wheat bread baked in a tandoor.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Batura (1 pc)",
+          "desc": "Large, fluffy deep fried leavened bread.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Cheese Naan",
+          "desc": "Naan stuffed with melted cheese and baked golden.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Lacha Paratha",
+          "desc": "Flaky, buttery layered Indian flatbread.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Biryani",
+      "items": [
+        {
+          "name": "Fish Biryani",
+          "desc": "Spiced fish fillets layered with fragrant basmati rice.",
+          "price": "$18.99",
+          "spice": "🌶",
+          "veg": false
+        },
+        {
+          "name": "Aahaa Special Boneless Biryani",
+          "desc": "Spiced boneless chicken biryani with aromatic rice.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Gongura Chicken Biryani",
+          "desc": "Biryani layered with chicken and tangy gongura.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Hyderabadi Dum Biryani (Chicken/Goat)",
+          "desc": "Aromatic basmati rice slow cooked with spices.",
+          "price": "$15.99 | $17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Chennai Dum Biryani (Chicken/Goat)",
+          "desc": "Traditional Chennai style biryani layered with aromatic spices.",
+          "price": "$15.99 | $17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Dindigul Biryani (Veg/Chicken/Goat)",
+          "desc": "Short grain rice slow cooked with aromatic spices.",
+          "price": "$13.99 | $14.99 | $16.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        }
+      ]
+    },
+    {
+      "name": "Combos",
+      "items": [
+        {
+          "name": "Idly Vada Combo (2 pcs Idly, 1 Vada)",
+          "desc": "Steamed idlies and crispy vada served with accompaniments.",
+          "price": "$12.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Parotta, Chicken Salna & Omelette",
+          "desc": "Flaky parotta served with chicken salna and omelette.",
+          "price": "$18.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Parotta, Chicken Salna & Chukka",
+          "desc": "Flaky parotta layered with chicken salna and chukka.",
+          "price": "$21.99",
+          "spice": "🌶🌶",
+          "veg": false
+        }
+      ]
+    },
+    {
+      "name": "Variety Rice",
+      "items": [
+        {
+          "name": "Jeera Rice",
+          "desc": "Fragrant basmati rice tossed with toasted cumin seeds.",
+          "price": "$10.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Lemon Rice",
+          "desc": "Tangy lemon rice with crunchy peanuts.",
+          "price": "$10.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Coconut Rice",
+          "desc": "Basmati rice tossed with fresh coconut.",
+          "price": "$10.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Gongura Rice",
+          "desc": "Basmati rice mixed with tangy sorrel paste.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Tamarind Rice",
+          "desc": "Traditional tangy tamarind rice with aromatic spices.",
+          "price": "$10.99",
+          "spice": "🌶🌶",
+          "veg": true
+        },
+        {
+          "name": "Peas Pulao",
+          "desc": "Fragrant basmati pilaf with green peas.",
+          "price": "$10.99",
+          "spice": "🌶",
+          "veg": true
+        },
+        {
+          "name": "Plain Rice",
+          "desc": "Steamed rice, light and fluffy.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Lunch Specials",
+      "items": [
+        {
+          "name": "Maha Virundhu (Non-Veg)",
+          "desc": "Grand non vegetarian feast with rice, meats, and sides.",
+          "price": "$16.99",
+          "spice": "",
+          "veg": false
+        },
+        {
+          "name": "Maha Virundhu (Veg)",
+          "desc": "Traditional vegetarian feast with rice, curries, and sides.",
+          "price": "$14.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Parotta Specials",
+      "items": [
+        {
+          "name": "Chicken Kothu Parotta",
+          "desc": "Chopped parotta stir fried with chicken and spices.",
+          "price": "$17.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Egg Kothu Parotta",
+          "desc": "Chopped parotta stir fried with egg and spices.",
+          "price": "$16.99",
+          "spice": "🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Kizhi Parotta (Chicken/Mutton/Shrimp)",
+          "desc": "Parotta layered with spiced filling and wrapped for dum cooking.",
+          "price": "$18.99 | $20.99 | $21.99",
+          "spice": "🌶🌶🌶",
+          "veg": false
+        },
+        {
+          "name": "Parotta 2 pcs with Veg/Chicken Curry",
+          "desc": "Parotta served with your choice of curry.",
+          "price": "$12.99 | $13.99",
+          "spice": "🌶🌶",
+          "veg": "both"
+        }
+      ]
+    },
+    {
+      "name": "Desserts",
+      "items": [
+        {
+          "name": "Carrot Halwa",
+          "desc": "Grated carrots slowly cooked with milk and nuts.",
+          "price": "$7.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Gulab Jamun (3 pcs)",
+          "desc": "Soft milk dumplings soaked in fragrant cardamom syrup.",
+          "price": "$6.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Rasmalai (2 pcs)",
+          "desc": "Spongy milk patties soaked in saffron milk.",
+          "price": "$8.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "name": "Badam Milk",
+          "desc": "Warm almond milk scented with saffron.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Butter Milk",
+          "desc": "Traditional spiced yogurt drink, creamy and refreshing.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Chiku Shake",
+          "desc": "Creamy milkshake blended with sweet sapodilla.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Lime Soda",
+          "desc": "Fizzy citrus quencher with tangy zest.",
+          "price": "$4.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Madras Coffee",
+          "desc": "Authentic South Indian filtered coffee.",
+          "price": "$3.49",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Mango Lassi",
+          "desc": "Rich yogurt blended with ripe mangoes.",
+          "price": "$6.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Mango Shake",
+          "desc": "Refreshing shake blended with mango.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Masala Chai",
+          "desc": "Spiced Indian tea with milk and sugar.",
+          "price": "$2.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "name": "Rose Milk",
+          "desc": "Chilled milk infused with fragrant rose.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Sodas (Pepsi/Fanta/Thumbsup)",
+          "desc": "Chilled selection of popular fizzy sodas.",
+          "price": "$3.99",
+          "spice": "",
+          "veg": true
+        },
+        {
+          "name": "Sweet Lassi",
+          "desc": "Classic thick and sweetened yogurt cooler.",
+          "price": "$5.99",
+          "spice": "",
+          "veg": true
+        }
+      ]
+    }
+  ]
+}
