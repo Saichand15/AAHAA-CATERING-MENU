@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
+  outputFileTracingIncludes: {
+    "/api/jobs/notifications": ["./public/aahaa-logo-email.png"],
+    "/api/requests": ["./public/aahaa-logo-email.png"],
+  },
   async headers() {
     return [{
       source: "/(.*)",

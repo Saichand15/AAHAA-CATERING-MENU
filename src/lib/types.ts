@@ -1,4 +1,4 @@
-export type Choice = { id: string; label: string; price_minor: number };
+export type Choice = { id: string; label: string; price_minor: number; requires_quote?: boolean };
 export type OptionGroup = {
   id: string;
   name: string;
@@ -9,6 +9,8 @@ export type OptionGroup = {
 
 export type MenuItem = {
   id: string;
+  menu_type?: "regular" | "catering";
+  is_custom_menu?: boolean;
   name: string;
   description: string;
   category: string;
@@ -53,15 +55,18 @@ export type CartLine = {
   quantity: number;
   selections: Record<string, string[]>;
   notes: string;
+  substitution_request?: string;
 };
 
 export type PricedLine = {
   item_id: string;
   name: string;
   unit: string;
+  description?: string;
   quantity: number;
   selections: { group: string; choices: { label: string; price_minor: number }[] }[];
   notes: string;
+  substitution_request?: string;
   unit_price_minor: number | null;
   total_minor: number | null;
 };
@@ -71,15 +76,15 @@ export type CateringRequest = {
   reference: string;
   created_at: string;
   customer_name: string;
-  email: string;
+  email: string | null;
   phone: string;
   preferred_contact: "email" | "phone" | "whatsapp";
-  event_type: string;
-  event_date: string;
-  event_time: string;
+  event_type: string | null;
+  event_date: string | null;
+  event_time: string | null;
   timezone: string;
-  guests: number;
-  fulfillment: "pickup" | "delivery";
+  guests: number | null;
+  fulfillment: "pickup" | "delivery" | null;
   address: string;
   notes: string;
   allergies: string;

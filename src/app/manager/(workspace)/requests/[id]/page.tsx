@@ -2,10 +2,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { staffSession } from "@/lib/auth";
-import { money } from "@/lib/validation";
+import { estimateLabel, money } from "@/lib/validation";
 import { AddNote, StatusControl } from "@/components/staff-controls";
 import { ItemSummary } from "@/components/storefront";
 import { NotificationList } from "@/components/notification-list";
+import { eventSchedule } from "@/lib/request-display";
+import { chatForRequest } from "@/lib/chat";
+import { ManagerConversation } from "@/components/manager-chat";
 
 export default async function RequestDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,6 +23,7 @@ export default async function RequestDetail({ params }: { params: Promise<{ id: 
   for (const response of [request, notes, jobs, history]) if (response.error) throw response.error;
   const r = request.data;
   if (!r) notFound();
+  const conversation = await chatForRequest(id);
   return <>
     <Link className="text-link" href="/manager/requests">Back to requests</Link>
     <div className="staff-title" style={{ marginTop: 25 }}>
@@ -28,17 +32,18 @@ export default async function RequestDetail({ params }: { params: Promise<{ id: 
     </div>
     <div className="staff-detail">
       <div className="stack">
+        <section className="panel manager-chat-conversation">{conversation ? <ManagerConversation conversation={conversation} /> : <><h2>Customer conversation</h2><p>No chat is linked to this enquiry yet. Customers can open chat after sending their request.</p><Link className="text-link" href="/manager/chats">Open chat inbox</Link></>}</section>
         <section className="panel"><h2>The event</h2>
           <dl className="detail-grid">
             <div><dt>Customer</dt><dd>{r.customer_name}</dd></div>
             <div><dt>Submission</dt><dd>{r.customer_id ? "Verified customer account" : "Guest enquiry"}</dd></div>
             <div><dt>Preferred contact</dt><dd>{r.preferred_contact}</dd></div>
-            <div><dt>Email</dt><dd><a className="text-link" href={`mailto:${r.email}?subject=${encodeURIComponent(`Your catering request ${r.reference}`)}`}>{r.email}</a></dd></div>
+            <div><dt>Email</dt><dd>{r.email ? <a className="text-link" href={`mailto:${r.email}?subject=${encodeURIComponent(`Your catering request ${r.reference}`)}`}>{r.email}</a> : "Not provided - follow up by phone"}</dd></div>
             <div><dt>Phone</dt><dd><a className="text-link" href={`tel:${r.phone}`}>{r.phone}</a></dd></div>
-            <div><dt>Occasion</dt><dd>{r.event_type}</dd></div>
-            <div><dt>Guests</dt><dd>{r.guests}</dd></div>
-            <div><dt>Event time ({r.timezone})</dt><dd>{r.event_date} at {r.event_time.slice(0, 5)}</dd></div>
-            <div><dt>Service</dt><dd>{r.fulfillment}</dd></div>
+            <div><dt>Occasion</dt><dd>{r.event_type || "Not provided"}</dd></div>
+            <div><dt>Guests</dt><dd>{r.guests ?? "Not provided"}</dd></div>
+            <div><dt>Event time ({r.timezone})</dt><dd>{eventSchedule(r.event_date, r.event_time, r.timezone)}</dd></div>
+            <div><dt>Service</dt><dd>{r.fulfillment || "Not provided"}</dd></div>
             {r.address && <div><dt>Delivery address</dt><dd>{r.address}</dd></div>}
             <div><dt>WhatsApp contact consent</dt><dd>{r.whatsapp_consent ? "Yes, for this enquiry" : "Not given"}</dd></div>
           </dl>
@@ -46,7 +51,7 @@ export default async function RequestDetail({ params }: { params: Promise<{ id: 
         </section>
         <section className="panel"><h2>Requested menu</h2>
           <ItemSummary items={r.items} currency={r.currency} />
-          <div className="subtotal"><span>{r.has_unpriced_items ? "Known subtotal (some items need pricing)" : "Menu estimate"}</span><strong>{money(r.known_subtotal_minor, r.currency)}</strong></div>
+          <div className="subtotal"><span>{          estimateLabel(r.items, r.has_unpriced_items)}</span><strong>{money(r.known_subtotal_minor, r.currency)}</strong></div>
           <p className="small-note">Not a final quote. Taxes, delivery and additional services need staff confirmation.</p>
         </section>
         <section className="panel"><h2>Special requirements</h2>

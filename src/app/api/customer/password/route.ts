@@ -3,6 +3,7 @@ import { z } from "zod";
 import { customerSession } from "@/lib/customer";
 import { customerPassword } from "@/lib/customer-validation";
 import { apiError, readJson, requireOrigin } from "@/lib/http";
+import { clearChatCookies } from "@/lib/chat";
 export async function POST(request: Request) {
   try {
     requireOrigin(request);
@@ -12,6 +13,8 @@ export async function POST(request: Request) {
     if (error) throw error;
     const { error: logoutError } = await db.auth.signOut({ scope: "global" });
     if (logoutError) throw logoutError;
-    return NextResponse.json({ ok: true });
+    const response = NextResponse.json({ ok: true });
+    clearChatCookies(response);
+    return response;
   } catch (error) { return apiError(error); }
 }

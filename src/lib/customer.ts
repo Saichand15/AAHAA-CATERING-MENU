@@ -3,6 +3,17 @@ import { AuthSessionMissingError } from "@supabase/supabase-js";
 import { sessionDb } from "./supabase";
 import { databaseConfigured } from "./config";
 import { HttpError } from "./http";
+import { customerEmail } from "./customer-validation";
+
+export function customerAuthTestEmail() {
+  if (process.env.NODE_ENV !== "development" || process.env.CUSTOMER_AUTH_ENABLED === "true") return null;
+  const origin = process.env.APP_URL;
+  if (!origin || !URL.canParse(origin)) return null;
+  const url = new URL(origin);
+  if (!["http:", "https:"].includes(url.protocol) || !["localhost", "127.0.0.1", "[::1]"].includes(url.hostname)) return null;
+  const parsed = customerEmail.safeParse(process.env.CUSTOMER_AUTH_TEST_EMAIL);
+  return parsed.success ? parsed.data : null;
+}
 
 export async function optionalCustomerSession() {
   if (!databaseConfigured()) return null;
@@ -32,7 +43,7 @@ export function customerAuthBlockers() {
   if (!databaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) blockers.push("Database access");
   if (!process.env.APP_URL) blockers.push("Website address");
   if (!process.env.RATE_LIMIT_SECRET || process.env.RATE_LIMIT_SECRET.length < 32) blockers.push("Login protection");
-  if (process.env.CUSTOMER_AUTH_ENABLED !== "true") blockers.push("Verified customer email delivery");
+  if (process.env.CUSTOMER_AUTH_ENABLED !== "true" && !customerAuthTestEmail()) blockers.push("Verified customer email delivery");
   if (process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) blockers.push("Login spam protection");
   return blockers;
 }

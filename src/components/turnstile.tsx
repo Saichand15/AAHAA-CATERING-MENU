@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 declare global {
   interface Window {
     turnstile?: {
-      render: (container: HTMLElement, options: { sitekey: string; action: string; callback: (token: string) => void; "expired-callback": () => void; "error-callback": () => void }) => string;
+      render: (container: HTMLElement, options: { sitekey: string; action: string; size: "compact"; callback: (token: string) => void; "expired-callback": () => void; "error-callback": () => void }) => string;
       remove: (id: string) => void;
     };
   }
@@ -18,7 +18,7 @@ export function Turnstile({ onToken, action = "catering-request" }: { onToken: (
   const mount = useCallback(() => {
     if (container.current && window.turnstile && widget.current === null && sitekey) {
       widget.current = window.turnstile.render(container.current, {
-        sitekey, action, callback: token => { setError(""); onToken(token); },
+        sitekey, action, size: "compact", callback: token => { setError(""); onToken(token); },
         "expired-callback": () => onToken(""),
         "error-callback": () => { onToken(""); setError("Spam protection could not load. Check your connection and try again."); },
       });
@@ -29,5 +29,5 @@ export function Turnstile({ onToken, action = "catering-request" }: { onToken: (
     return () => { if (widget.current !== null) { window.turnstile?.remove(widget.current); widget.current = null; } };
   }, [mount]);
   if (!sitekey) return null;
-  return <><Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" onReady={mount} onError={() => setError("Spam protection could not load. Refresh the page to try again.")} /><div ref={container} />{error && <p role="alert" className="error">{error}</p>}</>;
+  return <><Script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" onReady={mount} onError={() => setError("Spam protection could not load. Refresh the page to try again.")} /><div ref={container} className="captcha-container" />{error && <p role="alert" className="error">{error}</p>}</>;
 }

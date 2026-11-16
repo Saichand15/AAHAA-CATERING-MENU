@@ -45,9 +45,26 @@ describe("form and menu validation", () => {
   it.each([{ privacy_accepted: false }, { guests: 0 }, { phone: "123" }, { email: "bad" }, { event_date: "2027-02-30" }, { website: "spam" }, { items: [] }])("rejects invalid input %j", patch => {
     expect(requestSchema.safeParse({ ...input, ...patch }).success).toBe(false);
   });
-  it("requires delivery address and area acknowledgement", () => {
-    expect(requestSchema.safeParse({ ...input, fulfillment: "delivery" }).success).toBe(false);
+  it("allows an unknown delivery address but requires area acknowledgement when an address is supplied", () => {
+    expect(requestSchema.safeParse({ ...input, fulfillment: "delivery" }).success).toBe(true);
+    expect(requestSchema.safeParse({ ...input, fulfillment: "delivery", address: "Test address" }).success).toBe(false);
     expect(requestSchema.safeParse({ ...input, fulfillment: "delivery", address: "Test address", delivery_area_acknowledged: true }).success).toBe(true);
+  });
+  it("accepts contact-only enquiries without manufacturing an email or event details", () => {
+    const parsed = requestSchema.parse({ customer_name: input.customer_name, phone: input.phone, items: input.items, idempotency_key: input.idempotency_key, privacy_accepted: true });
+    expect(parsed).toMatchObject({ email: null, event_type: null, event_date: null, event_time: null, guests: null, fulfillment: null, preferred_contact: "phone" });
+    expect(() => validateEvent(parsed, settings)).not.toThrow();
+    expect(requestSchema.safeParse({ ...parsed, preferred_contact: "email" }).success).toBe(false);
+    expect(requestSchema.safeParse({ ...parsed, phone: "" }).success).toBe(false);
+    expect(requestSchema.safeParse({ ...parsed, customer_name: "" }).success).toBe(false);
+    expect(requestSchema.safeParse({ ...parsed, privacy_accepted: false }).success).toBe(false);
+  });
+  it("checks any supplied optional event values without requiring the others", () => {
+    const partial = requestSchema.parse({ ...input, email: "", preferred_contact: "phone", event_type: "", event_date: "2027-06-20", event_time: "", guests: "", fulfillment: "" });
+    expect(partial.event_time).toBeNull();
+    expect(() => validateEvent(partial, settings, new Date("2027-06-01"))).not.toThrow();
+    expect(() => validateEvent({ ...partial, event_date: "2027-05-01" }, settings, new Date("2027-06-01"))).toThrow(/notice/);
+    expect(() => validateEvent({ ...partial, guests: 2 }, settings, new Date("2027-06-01"))).toThrow(/guests/);
   });
   it("requires WhatsApp consent only when WhatsApp is preferred", () => {
     expect(requestSchema.safeParse({ ...input, preferred_contact: "whatsapp" }).success).toBe(false);

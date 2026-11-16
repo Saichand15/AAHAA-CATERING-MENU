@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto";
 import { NextResponse } from "next/server";
 import { customerAuthSchema } from "@/lib/customer-validation";
-import { customerAuthBlockers } from "@/lib/customer";
+import { customerAuthBlockers, customerAuthTestEmail } from "@/lib/customer";
 import { sessionDb, serviceDb } from "@/lib/supabase";
 import { appUrl } from "@/lib/config";
 import { apiError, HttpError, readJson, requireOrigin } from "@/lib/http";
@@ -11,6 +11,8 @@ export async function POST(request: Request) {
     requireOrigin(request);
     if (customerAuthBlockers().length) throw new HttpError(503, "Customer accounts are not open yet. You can still browse and continue as a guest.");
     const input = customerAuthSchema.parse(await readJson(request, 8192));
+    const testEmail = customerAuthTestEmail();
+    if (testEmail && input.email !== testEmail) throw new HttpError(403, "Account testing is restricted to the configured test email. Public signup is not open yet.");
     const network = process.env.VERCEL ? request.headers.get("x-vercel-forwarded-for")?.split(",")[0].trim() || "unknown" : "shared-origin";
     const admin = serviceDb();
     for (const [value, limit] of [[`customer-email:${input.email}`, 10], [`customer-network:${network}`, process.env.VERCEL ? 30 : 100]] as const) {

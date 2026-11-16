@@ -6,7 +6,7 @@ import { Turnstile } from "./turnstile";
 import { customerPassword } from "@/lib/customer-validation";
 import { sendJson } from "./staff-controls";
 
-export function CustomerAuthForm({ enabled, initialError = "", initialMessage = "" }: { enabled: boolean; initialError?: string; initialMessage?: string }) {
+export function CustomerAuthForm({ enabled, testMode = false, initialError = "", initialMessage = "" }: { enabled: boolean; testMode?: boolean; initialError?: string; initialMessage?: string }) {
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,13 +33,15 @@ export function CustomerAuthForm({ enabled, initialError = "", initialMessage = 
       });
       const result: { error?: string; message?: string; signedIn?: boolean } = await response.json();
       if (!response.ok) throw new Error(result.error || "The account action could not be completed.");
-      if (result.signedIn) { router.push("/account"); router.refresh(); }
+      if (result.signedIn) { window.dispatchEvent(new Event("aahaa-auth-changed")); router.push("/account"); router.refresh(); }
       else { setMessage(result.message || "Check your email for the next step."); setPassword(""); setConfirm(""); }
     } catch (error) { setError(error instanceof Error ? error.message : "Connection interrupted. Please try again."); }
     finally { setBusy(false); setCaptcha(""); setCaptchaKey(k => k + 1); }
   }
   const disabled = busy || !enabled || (!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && !captcha);
   return <>
+    {!enabled && <p className="notice" role="status">Sign-in and registration are currently unavailable. You can continue browsing as a guest.</p>}
+    {enabled && testMode && <p className="notice" role="status">Local account testing only. Use the configured test Gmail address. Public registration is not open.</p>}
     <div className="tabs auth-tabs"><button className={`tab ${mode === "login" ? "active" : ""}`} onClick={() => { setMode("login"); setError(""); setMessage(""); }} type="button">Customer login</button><button className={`tab ${mode === "signup" ? "active" : ""}`} onClick={() => { setMode("signup"); setError(""); setMessage(""); }} type="button">Create account</button></div>
     {mode === "reset" && <h2 className="auth-subtitle">Reset your password</h2>}
     <form onSubmit={submit}><fieldset disabled={busy || !enabled} className="plain-fieldset">
@@ -52,7 +54,7 @@ export function CustomerAuthForm({ enabled, initialError = "", initialMessage = 
       {mode === "login" && <button className="text-link" type="button" onClick={() => { setMode("reset"); setError(""); setMessage(""); }}>Forgot password?</button>}
       {mode === "signup" && <button className="text-link" type="button" disabled={disabled || !email} onClick={e => { if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Enter a valid email address first."); return; } void submit(e, true); }}>Resend verification email</button>}
     </fieldset></form>
-    <div className="auth-guest"><span>No account needed for an enquiry.</span><Link className="button button-outline full" href="/#menu">Continue as guest</Link></div>
+    <div className="auth-guest"><span>No account needed for an enquiry.</span><Link className="button button-outline full" href="/catering-menu#menu">Continue as guest</Link></div>
   </>;
 }
 
@@ -60,7 +62,7 @@ export function CustomerLogout() {
   const [error, setError] = useState("");
   const router = useRouter();
   return <><button className="text-link" onClick={async () => {
-    try { await sendJson("/api/customer/logout", {}); router.push("/"); router.refresh(); }
+    try { await sendJson("/api/customer/logout", {}); window.dispatchEvent(new Event("aahaa-auth-changed")); router.push("/"); router.refresh(); }
     catch (error) { setError(error instanceof Error ? error.message : "Could not sign out."); }
   }}>Sign out</button>{error && <p className="error" role="alert">{error}</p>}</>;
 }
@@ -87,7 +89,7 @@ export function CustomerPasswordForm() {
     if (!result.success) { setError(result.error.issues.map(i => i.message).join(" ")); return; }
     if (password !== form.get("confirm")) { setError("Passwords do not match."); return; }
     setBusy(true);
-    try { await sendJson("/api/customer/password", { password }); router.replace("/login?message=password-updated"); router.refresh(); }
+    try { await sendJson("/api/customer/password", { password }); window.dispatchEvent(new Event("aahaa-auth-changed")); router.replace("/login?message=password-updated"); router.refresh(); }
     catch (error) { setError(error instanceof Error ? error.message : "Could not update your password."); }
     finally { setBusy(false); }
   }}><label className="field">New password<input name="password" type="password" autoComplete="new-password" minLength={12} maxLength={72} required /><small>12-72 characters, including uppercase, lowercase and a number.</small></label><label className="field">Confirm new password<input name="confirm" type="password" autoComplete="new-password" required maxLength={72} /></label>{error && <p className="error" role="alert">{error}</p>}<button className="button" disabled={busy}>{busy ? "Updating..." : "Update password & sign out"}</button></form>;

@@ -1,6 +1,7 @@
 import type { BusinessSettings, CateringRequest, MenuItem, NotificationJob, PricedLine } from "./types";
 import type { EmailMessage } from "./email";
 import type { WhatsAppMessage } from "./whatsapp";
+import type { ChatMessage, ChatRecord } from "./chat-types";
 
 type Table<Row> = { Row: Row; Insert: Partial<Row>; Update: Partial<Row>; Relationships: [] };
 export type SubmissionRecord = Omit<CateringRequest, "id" | "reference" | "created_at" | "status" | "version"> & {
@@ -10,6 +11,9 @@ export type SubmissionRecord = Omit<CateringRequest, "id" | "reference" | "creat
 export type Database = {
   public: {
     Tables: {
+      chat_conversations: Table<ChatRecord>;
+      chat_messages: Table<ChatMessage>;
+      chat_request_links: Table<{ request_id: string; conversation_id: string; created_at: string }>;
       business_settings: Table<BusinessSettings>;
       staff_members: Table<{ user_id: string; role: "owner" | "manager"; created_at: string }>;
       customer_profiles: Table<{ id: string; full_name: string; phone: string; updated_at: string }>;
@@ -22,6 +26,10 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      chat_unread_count: { Args: Record<string, never>; Returns: number };
+      start_customer_chat: { Args: { p_access_hash: string; p_customer_id: string | null; p_name: string; p_phone: string; p_privacy: string; p_client_id: string; p_body: string }; Returns: string };
+      send_chat_message: { Args: { p_id: string; p_client_id: string; p_sender: string; p_author_id: string | null; p_body: string }; Returns: ChatMessage };
+      mark_chat_read: { Args: { p_id: string; p_sender: string; p_message_id: number }; Returns: undefined };
       submit_catering_request: {
         Args: { p_key: string; p_hash: string; p_payload: SubmissionRecord; p_customer_id?: string | null };
         Returns: { reference: string; id: string; duplicate: boolean }[];

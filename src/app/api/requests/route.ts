@@ -1,10 +1,23 @@
 import { createHash, createHmac } from "node:crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { serviceDb } from "@/lib/supabase";
 import { appUrl, submissionBlockers, whatsappBlockers } from "@/lib/config";
 import { apiError, HttpError, readJson, requireOrigin } from "@/lib/http";
 import { priceCart, requestSchema, settingsSchema, validateEvent } from "@/lib/validation";
 import { customerSession } from "@/lib/customer";
+import { deliverNotifications } from "@/lib/notifications";
+import { connectRequestChat } from "@/lib/chat";
+
+export const maxDuration = 240;
+
+function scheduleNotifications() {
+  after(async () => {
+    try { await deliverNotifications(); }
+    catch (error) {
+      console.error("Immediate notification delivery interrupted; saved jobs remain available to the worker", error);
+    }
+  });
+}
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +25,7 @@ export async function POST(request: Request) {
     if (submissionBlockers().length) throw new HttpError(503, "Online requests are not configured yet. Please contact the restaurant.");
     const input = requestSchema.parse(await readJson(request));
     const customer = input.customer_mode === "account" ? await customerSession() : null;
-    if (customer && customer.user.email?.toLowerCase() !== input.email.toLowerCase()) {
+    if (customer && customer.user.email?.toLowerCase() !== input.email?.toLowerCase()) {
       throw new HttpError(400, "Use your verified account email for this request.");
     }
     const db = serviceDb();
@@ -37,11 +50,12 @@ export async function POST(request: Request) {
     const { captcha_token: ignoredToken, website: ignoredWebsite, ...stableInput } = input;
     void ignoredToken; void ignoredWebsite;
     const hash = createHash("sha256").update(JSON.stringify({ ...stableInput, customer_id: customer?.user.id ?? null })).digest("hex");
-    const { data: existing, error: existingError } = await db.from("catering_requests").select("reference,payload_hash,items,currency,known_subtotal_minor,has_unpriced_items").eq("idempotency_key", input.idempotency_key).maybeSingle();
+    const { data: existing, error: existingError } = await db.from("catering_requests").select("id,reference,payload_hash,items,currency,known_subtotal_minor,has_unpriced_items").eq("idempotency_key", input.idempotency_key).maybeSingle();
     if (existingError) throw existingError;
     if (existing) {
       if (existing.payload_hash !== hash) throw new HttpError(409, "This submission was already received with different details. Start a new request.");
-      return NextResponse.json({ reference: existing.reference, items: existing.items, currency: existing.currency, knownSubtotal: existing.known_subtotal_minor, hasUnpriced: existing.has_unpriced_items });
+      scheduleNotifications();
+      return requestResponse(existing.id, { reference: existing.reference, items: existing.items, currency: existing.currency, knownSubtotal: existing.known_subtotal_minor, hasUnpriced: existing.has_unpriced_items });
     }
     const [{ data: settings, error: settingsError }, { data: menu, error: menuError }, notifications] = await Promise.all([
       db.from("business_settings").select("*").eq("id", true).single(),
@@ -56,7 +70,7 @@ export async function POST(request: Request) {
     const { data, error } = await db.rpc("submit_catering_request", {
       p_key: input.idempotency_key, p_hash: hash, p_customer_id: customer?.user.id ?? null,
       p_payload: {
-        customer_name: input.customer_name, email: input.email.toLowerCase(), phone: input.phone,
+        customer_name: input.customer_name, email: input.email?.toLowerCase() ?? null, phone: input.phone,
         preferred_contact: input.preferred_contact, event_type: input.event_type, event_date: input.event_date,
         event_time: input.event_time, timezone: settings.timezone, guests: input.guests, fulfillment: input.fulfillment,
         address: input.address, notes: input.notes, allergies: input.allergies, whatsapp_consent: input.whatsapp_consent,
@@ -69,6 +83,16 @@ export async function POST(request: Request) {
     if (error?.message.includes("VERIFIED_CUSTOMER_REQUIRED") || error?.message.includes("ACCOUNT_CONFLICT")) throw new HttpError(409, "Your account session changed. Sign in again and review the request.");
     if (error) throw error;
     if (!data?.[0]) throw new Error("Missing persisted request.");
-    return NextResponse.json({ reference: data[0].reference, items: priced.items, currency: settings.currency, knownSubtotal: priced.knownSubtotal, hasUnpriced: priced.hasUnpriced }, { status: 201 });
+    scheduleNotifications();
+    return requestResponse(data[0].id, { reference: data[0].reference, items: priced.items, currency: settings.currency, knownSubtotal: priced.knownSubtotal, hasUnpriced: priced.hasUnpriced }, 201);
   } catch (error) { return apiError(error); }
+}
+async function requestResponse(id: string, body: { reference: string; items: unknown; currency: string; knownSubtotal: number; hasUnpriced: boolean }, status = 200) {
+  const response = NextResponse.json(body, { status });
+  try { await connectRequestChat(response, id); }
+  catch (error) {
+    console.error("Enquiry saved but chat linking failed", { id, error });
+    response.headers.set("X-Chat-Link-Warning", "Your enquiry was saved. Chat linking is unavailable; include your reference when contacting the team.");
+  }
+  return response;
 }

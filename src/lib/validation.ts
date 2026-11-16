@@ -7,6 +7,7 @@ const choiceSchema = z.object({
   id: z.string().regex(/^[a-z0-9_-]{1,40}$/),
   label: z.string().trim().min(1).max(80),
   price_minor: z.number().int().min(0).max(100_000_000),
+  requires_quote: z.boolean().optional(),
 });
 const groupSchema = z.object({
   id: z.string().regex(/^[a-z0-9_-]{1,40}$/),
@@ -24,6 +25,8 @@ const groupSchema = z.object({
 });
 
 export const menuSchema = z.object({
+  menu_type: z.enum(["regular", "catering"]).default("catering"),
+  is_custom_menu: z.boolean().default(false),
   name: text(120).min(1),
   description: text(1200),
   category: text(80).min(1),
@@ -40,6 +43,12 @@ export const menuSchema = z.object({
   published: z.boolean(),
   sort_order: z.number().int().min(0).max(10000),
 }).superRefine((item, ctx) => {
+  if (item.is_custom_menu && (item.menu_type !== "catering" || item.kind !== "package" || !item.options.length)) {
+    ctx.addIssue({ code: "custom", message: "A custom menu must be a catering package with at least one category of choices." });
+  }
+  if (item.kind !== "package" && item.options.some(group => group.choices.some(choice => choice.requires_quote))) {
+    ctx.addIssue({ code: "custom", message: "Manager-quoted customization choices must belong to a catering package." });
+  }
   if (new Set(item.options.map(g => g.id)).size !== item.options.length) {
     ctx.addIssue({ code: "custom", message: "Option group IDs must be unique." });
   }
@@ -73,37 +82,41 @@ export const settingsSchema = z.object({
   if (s.delivery_enabled && !s.service_area) ctx.addIssue({ code: "custom", message: "Describe your delivery service area." });
 });
 
-const lineSchema = z.object({
+export const lineSchema = z.object({
   line_id: z.uuid(),
   item_id: z.uuid(),
   quantity: z.number().int().min(1).max(10000),
   selections: z.record(z.string().max(40), z.array(z.string().max(40)).max(20)),
   notes: text(500),
+  substitution_request: text(500).optional(),
 });
 export const requestSchema = z.object({
   customer_mode: z.enum(["guest", "account"]).default("guest"),
   idempotency_key: z.uuid(),
   customer_name: text(120).min(2),
-  email: z.email().max(254),
+  email: z.union([z.email().max(254), z.literal("")]).nullish().transform(value => value || null),
   phone,
-  preferred_contact: z.enum(["email", "phone", "whatsapp"]),
-  event_type: text(80).min(1),
-  event_date: z.iso.date(),
-  event_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-  guests: z.number().int().min(1).max(100000),
-  fulfillment: z.enum(["pickup", "delivery"]),
-  address: text(500),
-  notes: text(2000),
-  allergies: text(1000),
+  preferred_contact: z.enum(["email", "phone", "whatsapp"]).default("phone"),
+  event_type: text(80).nullish().transform(value => value || null),
+  event_date: z.union([z.iso.date(), z.literal("")]).nullish().transform(value => value || null),
+  event_time: z.union([z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/), z.literal("")]).nullish().transform(value => value || null),
+  guests: z.preprocess(value => value === "" || value == null ? null : value, z.number().int().min(1).max(100000).nullable()),
+  fulfillment: z.union([z.enum(["pickup", "delivery"]), z.literal("")]).nullish().transform(value => value || null),
+  address: text(500).default(""),
+  notes: text(2000).default(""),
+  allergies: text(1000).default(""),
   privacy_accepted: z.literal(true, { error: "Please acknowledge the privacy notice." }),
-  whatsapp_consent: z.boolean(),
-  delivery_area_acknowledged: z.boolean(),
-  website: z.string().max(0),
-  captcha_token: z.string().max(4096),
+  whatsapp_consent: z.boolean().default(false),
+  delivery_area_acknowledged: z.boolean().default(false),
+  website: z.string().max(0).default(""),
+  captcha_token: z.string().max(4096).default(""),
   items: z.array(lineSchema).min(1).max(50),
 }).superRefine((r, ctx) => {
-  if (r.fulfillment === "delivery" && (!r.address || !r.delivery_area_acknowledged)) {
-    ctx.addIssue({ code: "custom", message: "Enter a delivery address and acknowledge the service area." });
+  if (r.fulfillment === "delivery" && r.address && !r.delivery_area_acknowledged) {
+    ctx.addIssue({ code: "custom", message: "Acknowledge the service area for the supplied delivery address." });
+  }
+  if (r.preferred_contact === "email" && !r.email) {
+    ctx.addIssue({ code: "custom", message: "Enter an email address or choose phone as your preferred contact." });
   }
   if (r.preferred_contact === "whatsapp" && !r.whatsapp_consent) {
     ctx.addIssue({ code: "custom", message: "WhatsApp contact requires your consent." });
@@ -138,25 +151,40 @@ export function priceCart(lines: CartLine[], menu: MenuItem[]): { items: PricedL
       });
       return { group: group.name, choices };
     });
+    if (item.is_custom_menu && !selections.some(group => group.choices.length)) {
+      throw new ValidationError("Choose at least one dish for your customized catering menu.");
+    }
+    const customized = item.options.some(group => group.choices.some(choice => choice.requires_quote && line.selections[group.id]?.includes(choice.id)));
+    const substitution = line.substitution_request?.trim() || (customized ? "Customized package choices selected. Manager review and revised quote required; see selected categories and Special instructions." : undefined);
+    if (substitution && (item.kind !== "package" || substitution.length > 500)) {
+      throw new ValidationError("Substitution requests must be for a catering package and no longer than 500 characters.");
+    }
     const unitPrice = item.price_minor === null ? null : item.price_minor + extras;
     const total = unitPrice === null ? null : unitPrice * line.quantity;
     if (total !== null && !Number.isSafeInteger(total)) throw new ValidationError("This request is too large. Please contact the restaurant.");
-    return { item_id: item.id, name: item.name, unit: item.unit, quantity: line.quantity, selections, notes: line.notes, unit_price_minor: unitPrice, total_minor: total };
+    return { item_id: item.id, name: item.name, unit: item.unit, description: item.description, quantity: line.quantity, selections, notes: line.notes, ...(substitution ? { substitution_request: substitution } : {}), unit_price_minor: unitPrice, total_minor: total };
   });
   const knownSubtotal = items.reduce((sum, item) => sum + (item.total_minor ?? 0), 0);
   if (!Number.isSafeInteger(knownSubtotal)) throw new ValidationError("This request is too large. Please contact the restaurant.");
-  return { items, knownSubtotal, hasUnpriced: items.some(item => item.total_minor === null) };
+  return { items, knownSubtotal, hasUnpriced: items.some(item => item.total_minor === null || Boolean(item.substitution_request)) };
+}
+
+export function estimateLabel(items: PricedLine[], hasUnpriced: boolean) {
+  return items.some(item => item.substitution_request)
+    ? "Base estimate; substitutions need a manager quote"
+    : hasUnpriced ? "Known subtotal (some items need pricing)" : "Menu estimate";
 }
 
 export function validateEvent(input: RequestInput, settings: BusinessSettings, now = new Date()) {
   if (!settings.accepting_requests) throw new ValidationError("Online requests are currently paused. Please contact the restaurant.");
-  if (input.guests < settings.min_guests || input.guests > settings.max_guests) {
+  if (input.guests !== null && (input.guests < settings.min_guests || input.guests > settings.max_guests)) {
     throw new ValidationError(`We accept requests for ${settings.min_guests}-${settings.max_guests} guests. Contact us for other group sizes.`);
   }
   if ((input.fulfillment === "pickup" && !settings.pickup_enabled) || (input.fulfillment === "delivery" && !settings.delivery_enabled)) {
     throw new ValidationError("That fulfillment option is not available.");
   }
   if (input.preferred_contact === "whatsapp" && !settings.whatsapp) throw new ValidationError("WhatsApp contact is not configured.");
+  if (!input.event_date) return;
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: settings.timezone, year: "numeric", month: "2-digit", day: "2-digit",
     hour: "2-digit", minute: "2-digit", hourCycle: "h23",
@@ -167,6 +195,11 @@ export function validateEvent(input: RequestInput, settings: BusinessSettings, n
     const get = (type: string) => parts.find(p => p.type === type)!.value;
     return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
   };
+  if (!input.event_time) {
+    const earliest = localValue(new Date(now.getTime() + settings.lead_hours * 3600_000)).slice(0, 10);
+    if (input.event_date < earliest) throw new ValidationError(`Please allow at least ${settings.lead_hours} hours' notice (${settings.timezone}).`);
+    return;
+  }
   const wallTime = Date.parse(`${target}:00Z`);
   // Offsets on either side catch both DST overlaps and nonexistent local times.
   const offsets = new Set([-86400000, 0, 86400000].map(delta => {

@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock("../src/lib/supabase", () => ({ sessionDb: async () => ({ auth: mocks.auth }), serviceDb: () => ({ rpc: mocks.rpc }) }));
 import { POST } from "../src/app/api/customer/auth/route";
+import { customerAuthTestEmail } from "../src/lib/customer";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -24,6 +25,43 @@ const call = (body: unknown, origin = "https://catering.example.com") => POST(ne
 const signup = { action: "signup", email: "customer@example.com", password: "StrongPassword123", captcha_token: "" };
 
 describe("customer account API", () => {
+  it("allows other emails when accounts are enabled even if a local test email remains configured", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("CUSTOMER_AUTH_TEST_EMAIL", "restricted@example.com");
+    expect(customerAuthTestEmail()).toBeNull();
+    const response = await call(signup);
+    expect(response.status).toBe(200);
+    expect(mocks.auth.signUp).toHaveBeenCalledWith(expect.objectContaining({ email: signup.email }));
+  });
+  it("limits local test accounts to one email and never enables production using the test setting", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("CUSTOMER_AUTH_ENABLED", "false");
+    vi.stubEnv("CUSTOMER_AUTH_TEST_EMAIL", signup.email);
+    vi.stubEnv("APP_URL", "http://localhost:3000");
+    expect(customerAuthTestEmail()).toBe(signup.email);
+    const request = (email: string) => new Request("http://localhost:3000/api/customer/auth", { method: "POST", headers: { origin: "http://localhost:3000", "content-type": "application/json" }, body: JSON.stringify({ ...signup, email }) });
+    expect((await POST(request("other@example.com"))).status).toBe(403);
+    expect(mocks.auth.signUp).not.toHaveBeenCalled();
+    expect((await POST(request(signup.email))).status).toBe(200);
+    vi.stubEnv("NODE_ENV", "production");
+    expect(customerAuthTestEmail()).toBeNull();
+    expect((await POST(request(signup.email))).status).toBe(503);
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("APP_URL", "https://public.example.com");
+    expect(customerAuthTestEmail()).toBeNull();
+    vi.stubEnv("APP_URL", "invalid address");
+    expect(customerAuthTestEmail()).toBeNull();
+  });
+  it.each(["login", "signup", "reset", "resend"])("rejects non-allowlisted %s attempts before contacting Supabase", async action => {
+    vi.stubEnv("NODE_ENV", "development");
+    vi.stubEnv("APP_URL", "http://localhost:3000");
+    vi.stubEnv("CUSTOMER_AUTH_ENABLED", "false");
+    vi.stubEnv("CUSTOMER_AUTH_TEST_EMAIL", "allowed@example.com");
+    const response = await call({ ...signup, action }, "http://localhost:3000");
+    expect(response.status).toBe(403);
+    expect(mocks.rpc).not.toHaveBeenCalled();
+    for (const method of [mocks.auth.signInWithPassword, mocks.auth.signUp, mocks.auth.resend, mocks.auth.resetPasswordForEmail]) expect(method).not.toHaveBeenCalled();
+  });
   it("requests verified signup through Supabase without granting staff access", async () => {
     const response = await call(signup);
     expect(response.status).toBe(200);

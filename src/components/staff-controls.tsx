@@ -16,7 +16,7 @@ export function LoginForm() {
   const router = useRouter();
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault(); setBusy(true); setError("");
-    try { await sendJson("/api/staff/login", Object.fromEntries(new FormData(e.currentTarget))); router.push("/manager/requests"); router.refresh(); }
+    try { await sendJson("/api/staff/login", Object.fromEntries(new FormData(e.currentTarget))); window.dispatchEvent(new Event("aahaa-auth-changed")); router.push("/manager/requests"); router.refresh(); }
     catch (error) { setError(message(error)); }
     finally { setBusy(false); }
   }
@@ -26,7 +26,7 @@ export function LogoutButton() {
   const [error, setError] = useState("");
   const router = useRouter();
   return <><button className="quiet-link" onClick={async () => {
-    try { await sendJson("/api/staff/logout", {}); router.push("/manager/login"); router.refresh(); }
+    try { await sendJson("/api/staff/logout", {}); window.dispatchEvent(new Event("aahaa-auth-changed")); router.push("/manager/login"); router.refresh(); }
     catch (error) { setError(message(error)); }
   }}>Sign out</button>{error && <p role="alert">{error}</p>}</>;
 }

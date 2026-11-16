@@ -17,6 +17,14 @@ export function appUrl() {
   if (!value) throw new Error("APP_URL is not configured.");
   return new URL(value).origin;
 }
+export function chatBlockers() {
+  const missing: string[] = [];
+  if (!databaseConfigured() || !process.env.SUPABASE_SERVICE_ROLE_KEY) missing.push("Database connection");
+  if (!process.env.APP_URL || !process.env.RATE_LIMIT_SECRET || process.env.RATE_LIMIT_SECRET.length < 32) missing.push("Chat protection");
+  const localBypass = process.env.NODE_ENV === "development" && process.env.ALLOW_LOCAL_SUBMISSIONS === "true";
+  if (!localBypass && (!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || !process.env.TURNSTILE_SECRET_KEY)) missing.push("Spam protection");
+  return missing;
+}
 export function whatsappBlockers() {
   const missing: string[] = [];
   if (!process.env.WHATSAPP_ACCESS_TOKEN) missing.push("WhatsApp access token");

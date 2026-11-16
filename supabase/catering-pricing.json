@@ -1,0 +1,130 @@
+{
+  "source": "Catering Pricing.pdf",
+  "sourceSha256": "f13fc0ef9cf333ac95fcf04e7f278a3e391094e58120dafa4e5017547cac5829",
+  "currency": "USD",
+  "notes": [
+    "All tray sizes are approximate. Review tray sizes and finalize based on party appetite.",
+    "Paneer selection is allowed for only one entree.",
+    "Specific appetizer and entree dishes require manager confirmation.",
+    "The Special package lists three entrees, but the portion table only has two entree rows. Confirm the third entree portion with the manager."
+  ],
+  "packages": [
+    {
+      "id": "veg",
+      "name": "Aahaa Veg Package",
+      "inclusions": "2 veg appetizers; 2 veg entrees; veg biryani; white rice or jeera rice; sambar or rasam; bread; dessert; raita; salna.",
+      "biryani": ["Veg Biryani"],
+      "rice": ["White Rice", "Jeera Rice"],
+      "curry": ["Sambar", "Rasam"]
+    },
+    {
+      "id": "non-veg",
+      "name": "Aahaa Non-Veg Package",
+      "inclusions": "1 veg and 1 chicken appetizer; 1 veg and 1 chicken entree; veg or chicken biryani; white rice or jeera rice; sambar or rasam; bread; dessert; raita; salna.",
+      "biryani": ["Veg Biryani", "Chicken Biryani"],
+      "rice": ["White Rice", "Jeera Rice"],
+      "curry": ["Sambar", "Rasam"]
+    },
+    {
+      "id": "special",
+      "name": "Aahaa Special Package",
+      "inclusions": "1 veg and 1 chicken appetizer; 1 veg and 2 non-veg entrees (chicken/goat/fish); Thalapakatti chicken or veg biryani; white rice or veg pulao; sambar, rasam or kara kulambu; bread; dessert; raita; salna.",
+      "biryani": ["Thalapakatti Chicken Biryani", "Veg Biryani"],
+      "rice": ["White Rice", "Veg Pulao"],
+      "curry": ["Sambar", "Rasam", "Kara Kulambu"]
+    }
+  ],
+  "tiers": [
+    {
+      "guests": "20",
+      "prices": [320, 340, 380],
+      "appetizer": "Jumbo / 57 oz each",
+      "entree": "Jumbo / 57 oz each (2 listed portions)",
+      "biryani": "Medium shallow / 175 oz",
+      "rice": "Jumbo / 57 oz",
+      "curry": "Jumbo / 57 oz",
+      "breadPieces": 10,
+      "dessert": "Jumbo / 57 oz",
+      "salna": "16 oz",
+      "raita": "16 oz"
+    },
+    {
+      "guests": "25-30",
+      "prices": [380, 420, 480],
+      "appetizer": "Half shallow / 84 oz each",
+      "entree": "Half shallow / 84 oz each (2 listed portions)",
+      "biryani": "Medium / 228 oz",
+      "rice": "Half shallow / 84 oz",
+      "curry": "Half shallow / 84 oz",
+      "breadPieces": 15,
+      "dessert": "Half shallow / 84 oz",
+      "salna": "32 oz",
+      "raita": "32 oz"
+    },
+    {
+      "guests": "35-40",
+      "prices": [600, 640, 700],
+      "appetizer": "Half / 104 oz each",
+      "entree": "Half / 104 oz each (2 listed portions)",
+      "biryani": "Medium / 228 oz + half / 104 oz",
+      "rice": "Half shallow / 84 oz",
+      "curry": "Half / 104 oz",
+      "breadPieces": 20,
+      "dessert": "Half / 104 oz",
+      "salna": "32 oz",
+      "raita": "32 oz"
+    },
+    {
+      "guests": "45-50",
+      "prices": [750, 800, 865],
+      "appetizer": "Medium shallow / 175 oz each",
+      "entree": "Medium shallow / 175 oz each (2 listed portions)",
+      "biryani": "Medium / 228 oz + medium shallow / 175 oz",
+      "rice": "Half / 104 oz",
+      "curry": "Medium shallow / 175 oz",
+      "breadPieces": 25,
+      "dessert": "Medium shallow / 175 oz",
+      "salna": "Half shallow / 84 oz",
+      "raita": "Half shallow / 84 oz"
+    },
+    {
+      "guests": "55-60",
+      "prices": [900, 950, 1050],
+      "appetizer": "Medium / 228 oz each",
+      "entree": "Medium / 228 oz each (2 listed portions)",
+      "biryani": "1 full tray (ounces not specified)",
+      "rice": "Medium shallow / 175 oz",
+      "curry": "Medium / 228 oz",
+      "breadPieces": 30,
+      "dessert": "Medium / 228 oz",
+      "salna": "Half shallow / 84 oz",
+      "raita": "Half shallow / 84 oz"
+    },
+    {
+      "guests": "65-70",
+      "prices": [1000, 1150, 1250],
+      "appetizer": "Medium / 228 oz + half shallow / 84 oz each",
+      "entree": "Medium / 228 oz + half shallow / 84 oz each (2 listed portions)",
+      "biryani": "Full / 343 oz + half / 104 oz",
+      "rice": "Medium shallow / 175 oz",
+      "curry": "Medium / 228 oz",
+      "breadPieces": 35,
+      "dessert": "Medium / 228 oz + 36 oz pan",
+      "salna": "Half / 104 oz",
+      "raita": "Half / 104 oz"
+    },
+    {
+      "guests": "75-80",
+      "prices": [1150, 1300, 1400],
+      "appetizer": "Full / 343 oz each",
+      "entree": "Full / 343 oz each (2 listed portions)",
+      "biryani": "Full / 343 oz + medium / 228 oz",
+      "rice": "Full / 343 oz",
+      "curry": "Full / 343 oz",
+      "breadPieces": 40,
+      "dessert": "Full / 343 oz",
+      "salna": "Half / 104 oz",
+      "raita": "Half / 104 oz"
+    }
+  ]
+}

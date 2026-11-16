@@ -11,6 +11,7 @@ let saved: EmailMessage | null;
 const job = { id: "test-job", request_id: savedRequest.id, recipient: "owner@example.com", audience: "staff", channel: "email", attempts: 1, lease_token: "test-lease", created_at: new Date().toISOString() };
 beforeEach(() => {
   updates = []; saved = null;
+  vi.stubEnv("EMAIL_LOGO_URL", "");
   vi.stubEnv("RESEND_API_KEY", "test-key"); vi.stubEnv("EMAIL_FROM", "notify@example.com"); vi.stubEnv("APP_URL", "https://catering.example.com");
   vi.spyOn(console, "error").mockImplementation(() => {});
   mocks.rpc.mockResolvedValue({ data: [job], error: null });
@@ -38,6 +39,9 @@ describe("durable notification delivery", () => {
     const result = await deliverNotifications();
     expect(result.accepted).toBe(1);
     expect(fetcher.mock.calls[0][1].headers["Idempotency-Key"]).toBe("catering/test-job");
+    const message = JSON.parse(fetcher.mock.calls[0][1].body);
+    expect(message.attachments[0].content_id).toBe("aahaa-logo");
+    expect(message.html).toContain('src="cid:aahaa-logo"');
     expect(updates.some(u => u.status === "sent" && u.provider_id === "provider-message")).toBe(true);
     expect(updates.some(u => Boolean(u.message))).toBe(true);
   });
@@ -74,6 +78,8 @@ describe("durable notification delivery", () => {
     const body = JSON.parse(fetcher.mock.calls[0][1].body);
     expect(body.type).toBe("template");
     expect(body.template.components[0].parameters).toHaveLength(5);
+    expect(body.template.components[0].parameters[1].text).toContain(savedRequest.phone);
+    expect(body.template.components[0].parameters[3].text).toContain("2 x Test tray");
     expect(body.biz_opaque_callback_data).toBe("test-job:test-lease");
     expect(body.to).toBe("12125551234");
   });
