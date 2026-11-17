@@ -42,13 +42,14 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
   useEffect(() => {
     const videos = [heroVideo.current, midVideo.current].filter((video): video is HTMLVideoElement => Boolean(video));
     if (!videos.length || menuOnly) return;
-    const motionPreference = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
     const updatePlayback = () => {
-      if (motionPreference?.matches || document.visibilityState === "hidden") {
+      if (document.visibilityState === "hidden") {
         for (const video of videos) video.pause();
         return;
       }
       for (const video of videos) {
+        video.defaultMuted = true;
+        video.muted = true;
         video.defaultPlaybackRate = HERO_VIDEO_PLAYBACK_RATE;
         video.playbackRate = HERO_VIDEO_PLAYBACK_RATE;
         try {
@@ -60,10 +61,8 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
       }
     };
     updatePlayback();
-    motionPreference?.addEventListener("change", updatePlayback);
     document.addEventListener("visibilitychange", updatePlayback);
     return () => {
-      motionPreference?.removeEventListener("change", updatePlayback);
       document.removeEventListener("visibilitychange", updatePlayback);
     };
   }, [menuOnly]);
@@ -146,7 +145,7 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
           <p className="catering-scope">Catering enquiries only. No dine-in or table reservations.</p>
         </div>
         <div className="hero-art">
-          <video ref={heroVideo} className="hero-photo hero-video" muted loop playsInline preload="metadata" poster="/aahaa-catering-banner.webp" aria-label="Biryani being finished and a full Aahaa catering tray" role="img">
+          <video ref={heroVideo} className="hero-photo hero-video" muted loop autoPlay playsInline preload="metadata" poster="/aahaa-catering-banner.webp" aria-label="Biryani being finished and a full Aahaa catering tray" role="img">
             <source src="/aahaa-catering-hero.mp4" type="video/mp4" />
           </video>
           <div className="hero-steam" aria-hidden="true"><span /><span /><span /></div>
