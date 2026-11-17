@@ -101,10 +101,10 @@ test("homepage catering video plays silently and pauses for reduced motion", asy
   await expect(video).toHaveAttribute("playsinline", "");
   await expect(video.locator("source")).toHaveAttribute("src", "/aahaa-catering-hero.mp4");
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await expect.poll(() => video.evaluate(element => !element.paused)).toBe(true);
-  expect(await video.evaluate(element => element.duration)).toBeGreaterThan(4);
+  await expect.poll(() => video.evaluate(element => !(element as HTMLVideoElement).paused)).toBe(true);
+  expect(await video.evaluate(element => (element as HTMLVideoElement).duration)).toBeGreaterThan(4);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+  await expect.poll(() => video.evaluate(element => (element as HTMLVideoElement).paused)).toBe(true);
 });
 
 test("food customization remains usable on a narrow phone and in landscape", async ({ page }) => {

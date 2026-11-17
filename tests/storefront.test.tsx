@@ -150,7 +150,7 @@ describe("customer request flow", () => {
     expect(screen.getByRole("img", { name: /Paneer dish featured on Aahaa's catering menu website/ }).getAttribute("src")).toBe("/aahaa-catering-paneer.webp");
     expect(screen.getAllByRole("img", { name: /Halwa dessert/ }).length).toBeGreaterThan(0);
     expect(container.querySelectorAll(".hero-steam span")).toHaveLength(3);
-    const heroVideo = container.querySelector("video.hero-video");
+    const heroVideo = container.querySelector("video.hero-video") as HTMLVideoElement | null;
     expect(heroVideo?.getAttribute("poster")).toBe("/aahaa-catering-banner.webp");
     expect(heroVideo?.muted).toBe(true);
     expect(heroVideo?.playsInline).toBe(true);
