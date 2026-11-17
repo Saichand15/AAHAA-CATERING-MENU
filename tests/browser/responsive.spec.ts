@@ -91,6 +91,22 @@ test("phone forms avoid focus zoom and guest navigation reaches the menu", async
   await expect(page.getByRole("heading", { name: "Explore catering packages." })).toBeVisible();
 });
 
+test("homepage catering video plays silently and pauses for reduced motion", async ({ page }) => {
+  await page.goto("/");
+  const video = page.locator(".hero-video");
+  await expect(video).toBeVisible();
+  await expect(video).toHaveAttribute("poster", "/aahaa-catering-banner.webp");
+  await expect(video).toHaveAttribute("muted", "");
+  await expect(video).toHaveAttribute("loop", "");
+  await expect(video).toHaveAttribute("playsinline", "");
+  await expect(video.locator("source")).toHaveAttribute("src", "/aahaa-catering-hero.mp4");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await expect.poll(() => video.evaluate(element => !element.paused)).toBe(true);
+  expect(await video.evaluate(element => element.duration)).toBeGreaterThan(4);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect.poll(() => video.evaluate(element => element.paused)).toBe(true);
+});
+
 test("food customization remains usable on a narrow phone and in landscape", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
   await page.goto("/menu");

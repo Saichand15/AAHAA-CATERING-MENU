@@ -145,11 +145,16 @@ describe("customer request flow", () => {
     expect(screen.getByText("Catering enquiries only. No dine-in or table reservations.")).toBeTruthy();
     expect(screen.getAllByRole("link", { name: /Choose a menu/ }).some(link => link.getAttribute("href") === "#menu-categories")).toBe(true);
     expect(screen.getByRole("link", { name: /Explore catering menu/ }).getAttribute("href")).toBe("/catering-menu");
-    expect(screen.getAllByRole("link", { name: /Browse regular menu/ }).some(link => link.getAttribute("href") === "/menu")).toBe(true);
+    expect(screen.queryByRole("link", { name: /Browse regular menu/ })).toBeNull();
     expect(screen.queryByRole("button", { name: "Customise Test tray" })).toBeNull();
-    expect(screen.getByRole("img", { name: /Paneer and peppers from Aahaa/ }).getAttribute("src")).toBe("/aahaa-catering-banner.webp");
-    expect(screen.getByRole("img", { name: /Halwa dessert/ })).toBeTruthy();
+    expect(screen.getByRole("img", { name: /Paneer dish featured on Aahaa's catering menu website/ }).getAttribute("src")).toBe("/aahaa-catering-paneer.webp");
+    expect(screen.getAllByRole("img", { name: /Halwa dessert/ }).length).toBeGreaterThan(0);
     expect(container.querySelectorAll(".hero-steam span")).toHaveLength(3);
+    const heroVideo = container.querySelector("video.hero-video");
+    expect(heroVideo?.getAttribute("poster")).toBe("/aahaa-catering-banner.webp");
+    expect(heroVideo?.muted).toBe(true);
+    expect(heroVideo?.playsInline).toBe(true);
+    expect(heroVideo?.querySelector("source")?.getAttribute("src")).toBe("/aahaa-catering-hero.mp4");
     expect(screen.queryByRole("button", { name: /reserve|book a table/i })).toBeNull();
     expect(screen.queryByRole("link", { name: /reserve|book a table/i })).toBeNull();
   });
@@ -173,10 +178,11 @@ describe("customer request flow", () => {
     expect(cart.queryByText("$0.00")).toBeNull();
     expect(cart.getByText(/serving/)).toBeTruthy();
   });
-  it("shows verified restaurant details and links to the official restaurant menu", () => {
+  it("shows verified restaurant details and links to the restaurant website", () => {
     render(<Storefront settings={{ ...settings, hours: "Monday: Closed\nTuesday: 11 AM – 2:30 PM, 5 PM – 10 PM" }} menu={[item]} canSubmit={false} problem="Online requests are paused." />);
     expect(screen.getAllByText(/Test postal area/).length).toBeGreaterThan(0);
-    expect(screen.getByRole("link", { name: /View the restaurant menu/ }).getAttribute("href")).toBe("https://aahaaindiankitchen.com/indian-restaurant-menu");
+    expect(screen.queryByRole("link", { name: /View the restaurant menu/ })).toBeNull();
+    expect(screen.getByRole("link", { name: /Visit Aahaa Indian Kitchen/ }).getAttribute("href")).toBe("https://aahaaindiankitchen.com/");
     const hours = screen.getByText("Restaurant hours").parentElement;
     expect(hours?.querySelectorAll("li")).toHaveLength(2);
     expect(hours?.textContent).toContain("Tuesday: 11 AM");

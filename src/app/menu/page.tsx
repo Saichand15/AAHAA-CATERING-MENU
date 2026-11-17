@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
-import { Storefront } from "@/components/storefront";
-import { customerSummary, customerAuthTestEmail } from "@/lib/customer";
-import { getCatalog } from "@/lib/catalog";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Regular Restaurant Menu | Aahaa Indian Kitchen",
-  description: "Explore Aahaa Indian Kitchen's current restaurant dishes and share menu ideas for your catering enquiry.",
+  title: "Catering Menu | Aahaa Indian Kitchen",
+  description: "Explore priced Aahaa catering packages and send your event enquiry to our manager.",
 };
 
 export default async function RegularMenu() {
-  const [catalog, customer] = await Promise.all([
-    getCatalog("regular"),
-    (process.env.CUSTOMER_AUTH_ENABLED === "true" || customerAuthTestEmail()) ? customerSummary() : Promise.resolve(null),
-  ]);
-  return <Storefront {...catalog} customer={customer} menuOnly />;
+  redirect("/catering-menu");
 }

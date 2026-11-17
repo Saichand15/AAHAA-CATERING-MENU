@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowDown, ArrowRight, CheckCircle2, ChefHat, Clock3, ExternalLink, Leaf, Mail, MapPin, Minus, Phone, Plus, Search, ShoppingBag, Trash2, Utensils, Users, X } from "lucide-react";
+import { ArrowDown, ArrowRight, CheckCircle2, ChefHat, Clock3, ExternalLink, Leaf, Mail, MapPin, Minus, Phone, Plus, Search, ShoppingBag, Trash2, Users, X } from "lucide-react";
 import type { BusinessSettings, CartLine, MenuItem, PricedLine } from "@/lib/types";
 import { estimateLabel, money, priceCart, requestSchema, validateEvent, ValidationError } from "@/lib/validation";
 import { getRestaurantContact, restaurantInfo } from "@/lib/restaurant-info";
@@ -17,10 +17,13 @@ import { OpenCustomerChat } from "./customer-chat";
 
 type Customer = { email: string; full_name: string; phone: string };
 type Props = { settings: BusinessSettings | null; menu: MenuItem[]; cartMenu?: MenuItem[]; canSubmit: boolean; problem: string | null; customer?: Customer | null; menuOnly?: boolean; cateringMenu?: boolean };
+const HERO_VIDEO_PLAYBACK_RATE = 0.85;
 
 export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem, customer = null, menuOnly = false, cateringMenu = false }: Props) {
   const [introPhase, setIntroPhase] = useState<"entering" | "leaving" | "done">("entering");
   const { draft, setDraft, ready, storageError, emptyDraft } = useCateringDraft();
+  const heroVideo = useRef<HTMLVideoElement>(null);
+  const midVideo = useRef<HTMLVideoElement>(null);
   const { cart, checkout, receipt } = draft;
   const viewKey = cateringMenu ? "catering" : "regular";
   const view = draft.views[viewKey] ?? { category: "All", search: "", partySize: "All" };
@@ -36,6 +39,34 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
   const name = settings?.name || "Aahaa Indian Kitchen";
   const currency = settings?.currency || "USD";
   const contact = getRestaurantContact(settings);
+  useEffect(() => {
+    const videos = [heroVideo.current, midVideo.current].filter((video): video is HTMLVideoElement => Boolean(video));
+    if (!videos.length || menuOnly) return;
+    const motionPreference = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    const updatePlayback = () => {
+      if (motionPreference?.matches || document.visibilityState === "hidden") {
+        for (const video of videos) video.pause();
+        return;
+      }
+      for (const video of videos) {
+        video.defaultPlaybackRate = HERO_VIDEO_PLAYBACK_RATE;
+        video.playbackRate = HERO_VIDEO_PLAYBACK_RATE;
+        try {
+          const playback = video.play();
+          void playback?.catch(error => console.warn("Homepage catering video could not autoplay; showing its poster instead.", error));
+        } catch (error) {
+          console.warn("Homepage catering video could not autoplay; showing its poster instead.", error);
+        }
+      }
+    };
+    updatePlayback();
+    motionPreference?.addEventListener("change", updatePlayback);
+    document.addEventListener("visibilitychange", updatePlayback);
+    return () => {
+      motionPreference?.removeEventListener("change", updatePlayback);
+      document.removeEventListener("visibilitychange", updatePlayback);
+    };
+  }, [menuOnly]);
   const customMenus = cateringMenu ? menu.filter(item => item.is_custom_menu) : [];
   const catalogMenu = cateringMenu ? menu.filter(item => !item.is_custom_menu) : menu;
   const categories = ["All", ...new Set(catalogMenu.map(i => i.category)), ...(customMenus.length ? ["Customized"] : [])];
@@ -91,8 +122,8 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
     </section>}
     <header className="site-header wrap">
       <Brand name={name} />
-      <nav aria-label="Main navigation"><Link href="/catering-menu">Catering menu</Link><Link href="/menu#menu">Regular menu</Link><Link href="/#how-it-works">How to enquire</Link><Link href="/#contact">Contact manager</Link></nav>
-      <div className="header-actions"><Link className="quiet-link admin-login-link" href="/manager/login">Admin login</Link><Link className="quiet-link" href={customer ? "/account" : "/login"}>{customer ? "My account" : "Customer login"}</Link><Link className="button button-small" href={menuOnly ? "#menu" : "#menu-categories"}>{menuOnly ? cateringMenu ? "Browse packages" : "Browse regular menu" : "Choose a menu"} <ArrowRight size={16} /></Link></div>
+      <nav aria-label="Main navigation"><Link href="/catering-menu">Catering menu</Link><Link href="/#how-it-works">How to enquire</Link><Link href="/#contact">Contact manager</Link></nav>
+      <div className="header-actions"><a className="quiet-link" href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}>Call us</a><Link className="quiet-link" href={customer ? "/account" : "/login"}>{customer ? "My account" : "Customer login"}</Link><Link className="button button-small" href={menuOnly ? "#menu" : "#menu-categories"}>{menuOnly ? "Browse packages" : "Choose a menu"} <ArrowRight size={16} /></Link></div>
     </header>
     <main>
       {storageError && <p className="wrap error" role="alert">{storageError}</p>}
@@ -103,10 +134,10 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
         <span className="eyebrow">{cateringMenu ? "CATERING PACKAGES · PUBLISHED PRICES" : "REGULAR RESTAURANT MENU"}</span>
         <h1>{cateringMenu ? <>Your gathering.<br /><em>Your catering package.</em></> : <>Explore the <em>restaurant menu.</em></>}</h1>
         <p>{cateringMenu ? "Choose a Veg, Non-Veg or Aahaa Special package for your party size. Customize your included options, add dish preferences and share your event details with our manager." : "Browse current Aahaa dishes and add selections as inspiration for your catering enquiry. The team will confirm catering portions, pricing and availability for your event."}</p>
-        <Link className="quiet-link" href={cateringMenu ? "/menu" : "/catering-menu"}>{cateringMenu ? "Explore regular dishes for inspiration" : "Looking for our catering menu?"} <ArrowRight size={16} /></Link>
+        {!cateringMenu && <Link className="quiet-link" href="/catering-menu">Looking for our catering menu? <ArrowRight size={16} /></Link>}
       </section> : <section className="hero wrap">
         <div className="hero-copy">
-          <span className="eyebrow"><span className="little-line" /> INDIAN CATERING · BUFFALO GROVE</span>
+          <span className="eyebrow hero-eyebrow-scroll"><span className="little-line" /><span className="hero-eyebrow-scroll-track"><span>INDIAN CATERING · BUFFALO GROVE</span><span aria-hidden="true">INDIAN CATERING · BUFFALO GROVE</span></span></span>
           <span className="hero-script">Feel the taste.</span>
           <h1>Your event.<br />Our <em>catering.</em></h1>
           <p>Bring Aahaa Indian Kitchen to family celebrations, weddings, festivals and corporate gatherings. Choose a priced catering package and share your preferences; our team will confirm the menu and event arrangements.</p>
@@ -115,20 +146,56 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
           <p className="catering-scope">Catering enquiries only. No dine-in or table reservations.</p>
         </div>
         <div className="hero-art">
-          <Image className="hero-photo" src="/aahaa-catering-banner.webp" alt="Paneer and peppers from Aahaa Indian Kitchen's official catering page" width={1600} height={700} sizes="(max-width: 760px) calc(100vw - 36px), (max-width: 1500px) 48vw, 560px" loading="eager" fetchPriority="high" />
+          <video ref={heroVideo} className="hero-photo hero-video" muted loop playsInline preload="metadata" poster="/aahaa-catering-banner.webp" aria-label="Biryani being finished and a full Aahaa catering tray" role="img">
+            <source src="/aahaa-catering-hero.mp4" type="video/mp4" />
+          </video>
           <div className="hero-steam" aria-hidden="true"><span /><span /><span /></div>
         </div>
       </section>}
       {!menuOnly && <><section className="occasion-strip" aria-label="Occasions"><div className="wrap"><span>FOR EVERY REASON TO GATHER</span><span>Family celebrations</span><i /><span>Private parties</span><i /><span>Weddings &amp; events</span><i /><span>Festivals &amp; community</span></div></section>
+      <section className="wrap catering-gallery" aria-label="Featured catering dishes">
+        <article className="catering-gallery-card">
+          <Image src="/aahaa-catering-paneer.webp" alt="Paneer platter from Aahaa catering" width={900} height={900} sizes="(max-width: 760px) 100vw, 33vw" />
+          <span>Paneer specialties</span>
+        </article>
+        <article className="catering-gallery-card">
+          <Image src="/aahaa-catering-halwa.webp" alt="Halwa dessert from Aahaa catering" width={900} height={900} sizes="(max-width: 760px) 100vw, 33vw" />
+          <span>Fresh desserts</span>
+        </article>
+        <article className="catering-gallery-card">
+          <Image src="/aahaa-catering-banner.webp" alt="Chef-prepared catering spread from Aahaa" width={1280} height={720} sizes="(max-width: 760px) 100vw, 33vw" />
+          <span>Event-ready trays</span>
+        </article>
+      </section>
+      <section className="wrap catering-mid-video" aria-label="Catering highlight video">
+        <div className="catering-mid-video-layout">
+          <div className="catering-mid-video-frame">
+            <video ref={midVideo} className="catering-mid-video-media" muted loop autoPlay playsInline preload="metadata" poster="/aahaa-catering-banner.webp" aria-label="Aahaa catering kitchen highlight reel" role="img">
+              <source src="/aahaa-catering-mid.mp4" type="video/mp4" />
+            </video>
+            <span>Live kitchen energy · event-ready service</span>
+          </div>
+          <aside className="catering-mid-video-copy">
+            <span className="eyebrow">WHY CLIENTS CHOOSE AAHAA</span>
+            <h3>Made for events, not just meals.</h3>
+            <div className="catering-mid-points">
+              <span><CheckCircle2 size={16} /> Freshly prepared for your schedule</span>
+              <span><CheckCircle2 size={16} /> Vegetarian and custom options available</span>
+              <span><CheckCircle2 size={16} /> Manager follow-up for smooth execution</span>
+            </div>
+            <Link className="button button-small" href="/catering-menu#menu">Build your catering request <ArrowRight size={16} /></Link>
+          </aside>
+        </div>
+      </section>
       <section className="wrap catering-story" aria-labelledby="catering-story-title">
         <div className="catering-story-photos">
           <Image src="/aahaa-catering-paneer.webp" alt="Paneer dish featured on Aahaa's catering menu website" width={736} height={736} sizes="(max-width: 760px) 60vw, 330px" />
           <Image src="/aahaa-catering-halwa.webp" alt="Halwa dessert featured on Aahaa's catering website" width={900} height={900} sizes="(max-width: 760px) 38vw, 230px" />
         </div>
-        <div className="catering-story-copy"><span className="eyebrow">YOUR PEOPLE. YOUR OCCASION.</span><h2 id="catering-story-title">A little more flavor.<br /><em>A lot more together.</em></h2><p>Plan a wedding feast, birthday, office lunch or community celebration with Aahaa. Tell us what you love, how many people are coming and what your guests need.</p><div className="catering-story-points"><span><Leaf size={18} /> Vegetarian preferences welcome</span><span><Users size={18} /> Family, community &amp; corporate events</span><span><ChefHat size={18} /> Custom menu discussions with our team</span></div><Link className="quiet-link" href="/menu#menu">Find dishes for your event <ArrowRight size={17} /></Link></div>
+        <div className="catering-story-copy"><span className="eyebrow">YOUR PEOPLE. YOUR OCCASION.</span><h2 id="catering-story-title">A little more flavor.<br /><em>A lot more together.</em></h2><p>Plan a wedding feast, birthday, office lunch or community celebration with Aahaa. Tell us what you love, how many people are coming and what your guests need.</p><div className="catering-story-points"><span><Leaf size={18} /> Vegetarian preferences welcome</span><span><Users size={18} /> Family, community &amp; corporate events</span><span><ChefHat size={18} /> Custom menu discussions with our team</span></div><Link className="quiet-link" href="/catering-menu#menu">Browse catering packages <ArrowRight size={17} /></Link></div>
       </section>
       <section className="wrap menu-categories" id="menu-categories" aria-labelledby="menu-categories-title">
-        <div className="section-heading"><div><span className="eyebrow">TWO WAYS TO EXPLORE</span><h2 id="menu-categories-title">Choose your menu.</h2><p>Explore priced catering packages for your event, or browse restaurant dishes for inspiration.</p></div></div>
+        <div className="section-heading"><div><span className="eyebrow">CATERING FOR EVERY GATHERING</span><h2 id="menu-categories-title">Choose your catering package.</h2><p>Explore priced catering packages for your event, customize your options and send your enquiry to our manager.</p></div></div>
         <div className="menu-category-grid">
           <article className="menu-category-card catering-category">
             <span className="category-icon"><ChefHat size={25} /></span><span className="eyebrow">EVENTS · BULK ORDERS</span><h3>Catering menu</h3>
@@ -136,12 +203,6 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
             <Link className="button button-outline" href="/catering-menu">Explore catering menu <ArrowRight size={17} /></Link>
             {menu.some(item => item.is_custom_menu) && <Link className="text-link custom-menu-home-link" href="/catering-menu#custom-menu">Or build your own catering menu</Link>}
             <small>{menu.length ? `${menu.length} catering options to explore` : "Published package prices and portions"}</small>
-          </article>
-          <article className="menu-category-card regular-category">
-            <span className="category-icon"><Utensils size={25} /></span><span className="eyebrow">CURRENT RESTAURANT DISHES</span><h3>Regular menu options</h3>
-            <p>Explore current restaurant dishes and share your favorites for catering consideration. Catering portions and prices are confirmed separately.</p>
-            <Link className="button" href="/menu">Browse regular menu <ArrowRight size={17} /></Link>
-            <small>Restaurant dishes · catering pricing confirmed separately</small>
           </article>
         </div>
       </section>
@@ -187,7 +248,6 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
           <h2 id="restaurant-context-title">Indian flavors for gatherings across the neighborhood.</h2>
           <p>Our restaurant brings together South Indian and North Indian favorites, Mughlai dishes, Chinese selections and biryani. Ask about vegetarian choices and custom menus for weddings, private parties, festivals, community events and corporate gatherings.</p>
           <div className="restaurant-context-links">
-            <a className="quiet-link" href="https://aahaaindiankitchen.com/indian-restaurant-menu" target="_blank" rel="noreferrer">View the restaurant menu <ExternalLink size={16} /></a>
             <a className="quiet-link" href="https://aahaaindiankitchen.com/" target="_blank" rel="noreferrer">Visit Aahaa Indian Kitchen <ExternalLink size={16} /></a>
           </div>
         </div>

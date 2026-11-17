@@ -2,7 +2,6 @@ import { expect, test } from "@playwright/test";
 
 test("bottom chat remains accessible at phone and landscape sizes without promising unconfigured service", async ({ page }) => {
   await page.goto("/catering-menu");
-  await expect(page.getByRole("link", { name: "Admin login", exact: true })).toHaveAttribute("href", "/manager/login");
   await page.getByRole("button", { name: "Chat with AAHAA", exact: true }).click();
   const chat = page.getByRole("dialog", { name: "Chat with AAHAA", exact: true });
   await expect(chat).toBeVisible();
@@ -17,7 +16,7 @@ test("bottom chat remains accessible at phone and landscape sizes without promis
   }
   await chat.getByRole("button", { name: "Close chat" }).click();
   await expect(chat).toHaveCount(0);
-  await page.getByRole("link", { name: "Admin login", exact: true }).click();
+  await page.goto("/admin");
   await expect(page).toHaveURL(/\/manager\/login$/);
   await expect(page.getByLabel("Staff email")).toBeVisible();
   await expect(page.getByRole("button", { name: "Chat with AAHAA", exact: true })).toHaveCount(0);
