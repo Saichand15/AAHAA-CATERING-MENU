@@ -16,10 +16,10 @@ import { eventSchedule } from "@/lib/request-display";
 import { OpenCustomerChat } from "./customer-chat";
 
 type Customer = { email: string; full_name: string; phone: string };
-type Props = { settings: BusinessSettings | null; menu: MenuItem[]; cartMenu?: MenuItem[]; canSubmit: boolean; problem: string | null; customer?: Customer | null; menuOnly?: boolean; cateringMenu?: boolean };
+type Props = { settings: BusinessSettings | null; menu: MenuItem[]; cartMenu?: MenuItem[]; canSubmit: boolean; problem: string | null; customer?: Customer | null; menuOnly?: boolean; cateringMenu?: boolean; customMenuOnly?: boolean };
 const HERO_VIDEO_PLAYBACK_RATE = 0.85;
 
-export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem, customer = null, menuOnly = false, cateringMenu = false }: Props) {
+export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem, customer = null, menuOnly = false, cateringMenu = false, customMenuOnly = false }: Props) {
   const [introPhase, setIntroPhase] = useState<"entering" | "leaving" | "done">("entering");
   const { draft, setDraft, ready, storageError, emptyDraft } = useCateringDraft();
   const heroVideo = useRef<HTMLVideoElement>(null);
@@ -67,12 +67,28 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
     };
   }, [menuOnly]);
   const customMenus = cateringMenu ? menu.filter(item => item.is_custom_menu) : [];
-  const catalogMenu = cateringMenu ? menu.filter(item => !item.is_custom_menu) : menu;
-  const categories = ["All", ...new Set(catalogMenu.map(i => i.category)), ...(customMenus.length ? ["Customized"] : [])];
+  const catalogMenu = customMenuOnly ? [] : cateringMenu ? menu.filter(item => !item.is_custom_menu) : menu;
+  const categories = customMenuOnly ? ["Customized"] : ["All", ...new Set(catalogMenu.map(i => i.category)), ...(customMenus.length ? ["Customized"] : [])];
   const partySizes = [...new Set(catalogMenu.filter(i => i.kind === "package").map(i => i.unit.replace(/^package for /, "")))];
-  const activeCategory = categories.includes(category) ? category : "All";
+  const activeCategory = customMenuOnly ? "Customized" : categories.includes(category) ? category : "All";
   const activePartySize = partySize === "All" || partySizes.includes(partySize) ? partySize : "All";
   const filtered = catalogMenu.filter(item => (activeCategory === "All" || item.category === activeCategory) && (activePartySize === "All" || item.unit === `package for ${activePartySize}`) && `${item.name} ${item.description} ${item.dietary.join(" ")}`.toLowerCase().includes(search.toLowerCase()));
+  const initialViewNormalized = useRef(false);
+  useEffect(() => {
+    if (!menuOnly || !cateringMenu || customMenuOnly || initialViewNormalized.current) return;
+    initialViewNormalized.current = true;
+    const invalidCategory = !categories.includes(category) || category === "Customized";
+    const invalidPartySize = partySize !== "All" && !partySizes.includes(partySize);
+    if (invalidCategory || invalidPartySize) {
+      setDraft(previous => ({
+        ...previous,
+        views: {
+          ...previous.views,
+          [viewKey]: { ...(previous.views[viewKey] ?? { category: "All", search: "", partySize: "All" }), category: "All", search: "", partySize: "All" },
+        },
+      }));
+    }
+  }, [menuOnly, cateringMenu, customMenuOnly, category, partySize, setDraft, viewKey, categories, partySizes]);
   const reviewed = cart.map(line => {
     try { return { line, priced: priceCart([line], cartMenu).items[0], error: "" }; }
     catch (error) {
@@ -132,9 +148,10 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
       {ready && cart.length > 0 && !receipt && <div className="draft-shortcut wrap" role="region" aria-label="Your catering cart"><span><ShoppingBag size={18} /> {cart.length} menu selection{cart.length === 1 ? "" : "s"}</span>{menuOnly ? <button className="button button-small" onClick={() => document.getElementById("catering-cart")?.scrollIntoView({ behavior: "smooth" })}>Review cart &amp; send <ArrowRight size={16} /></button> : <Link className="button button-small" href="/catering-menu#catering-cart">Review cart &amp; send <ArrowRight size={16} /></Link>}</div>}
       {menuOnly ? <section className="menu-page-intro wrap">
         <Link className="quiet-link" href="/"><ArrowDown className="back-arrow" size={15} /> Back to Aahaa catering</Link>
-        <span className="eyebrow">{cateringMenu ? "CATERING PACKAGES · PUBLISHED PRICES" : "REGULAR RESTAURANT MENU"}</span>
-        <h1>{cateringMenu ? <>Your gathering.<br /><em>Your catering package.</em></> : <>Explore the <em>restaurant menu.</em></>}</h1>
-        <p>{cateringMenu ? "Choose a Veg, Non-Veg or Aahaa Special package for your party size. Customize your included options, add dish preferences and share your event details with our manager." : "Browse current Aahaa dishes and add selections as inspiration for your catering enquiry. The team will confirm catering portions, pricing and availability for your event."}</p>
+        <span className="eyebrow">{customMenuOnly ? "CUSTOMIZED CATERING · MANAGER QUOTE" : cateringMenu ? "CATERING PACKAGES · PUBLISHED PRICES" : "REGULAR RESTAURANT MENU"}</span>
+        <h1>{customMenuOnly ? <>Build your<br /><em>customized menu.</em></> : cateringMenu ? <>Your gathering.<br /><em>Your catering package.</em></> : <>Explore the <em>restaurant menu.</em></>}</h1>
+        <p>{customMenuOnly ? "Choose dishes category-wise and send your preferences. Our manager will confirm availability, portions and pricing with you before order confirmation." : cateringMenu ? "Choose a Veg, Non-Veg or Aahaa Special package for your party size. Customize your included options, add dish preferences and share your event details with our manager." : "Browse current Aahaa dishes and add selections as inspiration for your catering enquiry. The team will confirm catering portions, pricing and availability for your event."}</p>
+        {cateringMenu && <div className="catering-mode-switch" role="navigation" aria-label="Catering menu mode"><Link className={customMenuOnly ? "button button-outline" : "button"} href="/catering-menu">Standard catering packages</Link><Link className={customMenuOnly ? "button" : "button button-outline"} href="/catering-menu/customized">Customized catering menu</Link></div>}
         {!cateringMenu && <Link className="quiet-link" href="/catering-menu">Looking for our catering menu? <ArrowRight size={16} /></Link>}
       </section> : <section className="hero wrap">
         <div className="hero-copy">
@@ -202,8 +219,14 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
             <span className="category-icon"><ChefHat size={25} /></span><span className="eyebrow">EVENTS · BULK ORDERS</span><h3>Catering menu</h3>
             <p>Veg, Non-Veg and Aahaa Special packages. Compare prices, choose a party size and customize your preferences.</p>
             <Link className="button button-outline" href="/catering-menu">Explore catering menu <ArrowRight size={17} /></Link>
-            {menu.some(item => item.is_custom_menu) && <Link className="text-link custom-menu-home-link" href="/catering-menu#custom-menu">Or build your own catering menu</Link>}
+            {menu.some(item => item.is_custom_menu) && <Link className="text-link custom-menu-home-link" href="/catering-menu/customized">Or build your own catering menu</Link>}
             <small>{menu.length ? `${menu.length} catering options to explore` : "Published package prices and portions"}</small>
+          </article>
+          <article className="menu-category-card regular-category">
+            <span className="category-icon"><Users size={25} /></span><span className="eyebrow">CATEGORY-WISE SELECTIONS</span><h3>Customized catering</h3>
+            <p>Choose dishes by category and send your preferred selections. Our manager confirms portions, availability and final pricing with you.</p>
+            <Link className="button" href="/catering-menu/customized">Build customized menu <ArrowRight size={17} /></Link>
+            <small>Manager quote shared after your enquiry</small>
           </article>
         </div>
       </section>
@@ -215,12 +238,12 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
       {menuOnly && <section className="wrap menu-section catalog-section" id="menu">
         <div className="section-heading"><div><span className="eyebrow">{cateringMenu ? "PACKAGES FOR YOUR OCCASION" : "CURRENT RESTAURANT DISHES · CATERING INSPIRATION"}</span><h2>{cateringMenu ? "Explore catering packages." : "Explore the regular menu."}</h2><p>{cateringMenu ? "Prices are per whole package, not per person. Quantity 1 means one complete package for the stated party size." : "Choose restaurant dishes to share as ideas. Our team will confirm catering portions, prices and availability for your event."}</p></div><span className="small-note"><Leaf size={16} /> Preferences welcome</span></div>
         {problem && <p className="storefront-status" role="status"><Clock3 size={16} />{problem}</p>}
-        {cateringMenu && <details className="package-guidance"><summary>Package guidance &amp; portion information</summary><p>Tray sizes and guest coverage are approximate; review portions based on your guests&apos; appetite. Paneer may be selected for only one entr&eacute;e. Specific appetizer and entr&eacute;e dishes are finalized with our team.</p><p>The Special package includes three entr&eacute;es, but the supplied portion table lists only two entr&eacute;e rows. Our manager will clarify that portion before confirmation. Taxes, delivery and changes are confirmed separately.</p></details>}
-        {menu.some(item => item.description.includes("not a catering quote")) && <p className="menu-pricing-note">Restaurant menu prices are for reference only, not catering quotes. Serving quantities are not catering tray portions. Catering portions, pricing and availability are confirmed for each event. Please share any allergy requirements with our team.</p>}
+        {cateringMenu && !customMenuOnly && <details className="package-guidance"><summary>Package guidance &amp; portion information</summary><p>Tray sizes and guest coverage are approximate; review portions based on your guests&apos; appetite. Paneer may be selected for only one entr&eacute;e. Specific appetizer and entr&eacute;e dishes are finalized with our team.</p><p>The Special package includes three entr&eacute;es, but the supplied portion table lists only two entr&eacute;e rows. Our manager will clarify that portion before confirmation. Taxes, delivery and changes are confirmed separately.</p></details>}
+        {menu.some(item => item.description.includes("not a catering quote")) && !customMenuOnly && <p className="menu-pricing-note">Restaurant menu prices are for reference only, not catering quotes. Serving quantities are not catering tray portions. Catering portions, pricing and availability are confirmed for each event. Please share any allergy requirements with our team.</p>}
         <div className="menu-layout">
           <div>
-            <div className="menu-tools"><div className="tabs" aria-label="Menu categories">{categories.map(c => <button key={c} className={activeCategory === c ? "tab active" : "tab"} onClick={() => setCategory(c)} aria-pressed={activeCategory === c}>{c}</button>)}</div><label className="search"><Search size={17} /><input aria-label="Search menu" placeholder="Find a favourite..." maxLength={254} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
-            {customMenus.length > 0 && <section className="custom-menu-intro" id="custom-menu" aria-label="Customized catering menus"><div><span className="eyebrow">YOUR CHOICES, YOUR GATHERING</span><h3>Want a menu of your own?</h3><p>Choose dishes from category dropdowns instead of a fixed package. Our manager confirms portions, availability and your quote.</p></div><div className="custom-menu-actions">{customMenus.map(item => <button key={item.id} className="button" disabled={!ready || !item.available || Boolean(receipt)} onClick={() => openItem(item)}>{item.available ? item.name : `${item.name} - unavailable`} <ChefHat size={17} /></button>)}</div></section>}
+            {!customMenuOnly && <div className="menu-tools"><div className="tabs" aria-label="Menu categories">{categories.map(c => <button key={c} className={activeCategory === c ? "tab active" : "tab"} onClick={() => setCategory(c)} aria-pressed={activeCategory === c}>{c}</button>)}</div><label className="search"><Search size={17} /><input aria-label="Search menu" placeholder="Find a favourite..." maxLength={254} value={search} onChange={e => setSearch(e.target.value)} /></label></div>}
+            {customMenus.length > 0 && <section className="custom-menu-intro" id="custom-menu" aria-label="Customized catering menus"><div><span className="eyebrow">YOUR CHOICES, YOUR GATHERING</span><h3>{customMenuOnly ? "Pick categories and send your custom menu request." : "Want a menu of your own?"}</h3><p>Choose dishes from category dropdowns instead of a fixed package. Our manager confirms portions, availability and your quote.</p></div><div className="custom-menu-actions">{customMenus.map(item => <button key={item.id} className="button" disabled={!ready || !item.available || Boolean(receipt)} onClick={() => openItem(item)}>{item.available ? item.name : `${item.name} - unavailable`} <ChefHat size={17} /></button>)}</div></section>}
             {cateringMenu && activeCategory !== "Customized" && <label className="field package-size-filter">Party size<select value={activePartySize} onChange={e => setPartySize(e.target.value)}><option value="All">All party sizes</option>{partySizes.map(size => <option key={size} value={size}>{size}</option>)}</select><small>For a size between listed ranges or over 80 guests, contact our team for guidance.</small></label>}
             {filtered.length ? <div className="menu-grid">{filtered.map(item => <article className={`menu-card ${item.kind === "package" ? "catalog-package" : "catalog-dish"}`} key={item.id}>
               {item.kind !== "package" && <div className={`menu-image ${!item.available ? "unavailable" : ""}`}>{item.image_url ?
@@ -228,7 +251,7 @@ export function Storefront({ settings, menu, cartMenu = menu, canSubmit, problem
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={item.image_url} alt={item.name} loading="lazy" /> : <div className="dish-placeholder"><ChefHat size={48} strokeWidth={1} />                <span>From our kitchen</span></div>}
               </div>}<div className="menu-card-body">{item.kind === "package" && <span className="catalog-package-label"><Users size={14} /> {item.unit.replace(/^package for /, "")}</span>}<div className="dietary">{item.dietary.map(tag => <span key={tag}>{tag}</span>)}</div><h3>{item.name}</h3>{item.kind === "package" ? <details className="package-portions"><summary>Inclusions, trays &amp; notes</summary><PackageDescription description={item.description} /></details> : <details className="catalog-dish-details"><summary>Dish details</summary><p>{item.description}</p></details>}<div className="menu-card-bottom"><div><strong>{item.price_minor === null ? "Price on request" : money(item.price_minor, currency)}</strong><small>per {item.unit}</small></div><button className="add-button" aria-label={`Customise ${item.name}`} onClick={() => openItem(item)} disabled={!ready || !item.available || Boolean(receipt)}>{item.available ? <>Choose <Plus size={16} /></> : "Unavailable"}</button></div></div>
-            </article>)}</div> : activeCategory === "Customized" && customMenus.length ? null : <div className="empty-menu"><span className="empty-icon"><ChefHat size={32} strokeWidth={1.4} /></span><h3>{menu.length ? "No dishes found" : "Menu unavailable"}</h3><p>{menu.length ? "Try a different search or category." : "Please contact the restaurant for current menu availability."}</p>{menu.length ? <button className="quiet-link" onClick={() => { setSearch(""); setCategory("All"); setPartySize("All"); }}>Clear filters</button> : <a href="#contact" className="quiet-link">Contact the team <ArrowRight size={16} /></a>}</div>}
+            </article>)}</div> : activeCategory === "Customized" && customMenus.length ? null : <div className="empty-menu"><span className="empty-icon"><ChefHat size={32} strokeWidth={1.4} /></span><h3>{menu.length ? "No dishes found" : "Menu unavailable"}</h3><p>{menu.length ? "Try a different search or category." : "Please contact the restaurant for current menu availability."}</p>{menu.length ? <button className="quiet-link" onClick={() => { setSearch(""); setCategory(customMenuOnly ? "Customized" : "All"); setPartySize("All"); }}>Clear filters</button> : <a href="#contact" className="quiet-link">Contact the team <ArrowRight size={16} /></a>}</div>}
           </div>
           <aside className="cart-panel" id="catering-cart" aria-label="Your catering request"><div className="cart-heading"><ShoppingBag size={21} /><h3>Your catering menu</h3><span className="count">{cart.length}</span></div>
             {cart.length === 0 ? <div className="empty-cart"><div className="bag-circle"><ShoppingBag size={32} strokeWidth={1.2} /></div><strong>Start with something delicious</strong><p>Your menu selections will appear here. A great gathering starts with a favourite.</p></div> : <div className="cart-lines">{reviewed.map(({ line: saved, priced: line, error }) => {

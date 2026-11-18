@@ -204,6 +204,8 @@ h3{font-weight:700}
 .menu-page-intro h1{max-width:760px}
 .menu-page-intro h1 em{color:var(--orange);font-style:normal}
 .menu-page-intro>p{max-width:720px;font-size:16px;line-height:1.8}
+.catering-mode-switch{display:flex;flex-wrap:wrap;gap:12px}
+.catering-mode-switch .button{min-width:232px;justify-content:center}
 .menu-page-intro>.quiet-link:last-child{margin-top:5px;color:var(--orange-dark)}
 .menu-route-page .menu-section{padding-top:25px}
 .catering-menu-page{min-height:100vh;display:flex;flex-direction:column}
@@ -217,6 +219,7 @@ h3{font-weight:700}
 .catering-coming-soon .inline-actions{justify-content:center}
 @media(hover:hover){.menu-category-card:hover{transform:translateY(-4px);border-color:#dfc4ad;box-shadow:0 16px 36px #50331b12}}
 @media(max-width:760px){.menu-categories{padding-top:42px;padding-bottom:48px}.menu-category-grid{grid-template-columns:1fr;gap:14px}.menu-category-card{min-height:0;padding:22px}.menu-category-card p{margin-bottom:16px}.menu-page-intro{padding-top:26px}.menu-page-intro>p{font-size:15px}.catering-menu-content{padding-top:20px;padding-bottom:42px}.catering-coming-soon{margin-top:30px;padding:27px 20px}.catering-coming-soon .inline-actions{flex-direction:column}.catering-coming-soon .inline-actions .button{width:100%}.catering-menu-page .site-footer{width:calc(100% - 40px)}}
+@media(max-width:760px){.catering-mode-switch{width:100%}.catering-mode-switch .button{width:100%;min-width:0}}
 @media(prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
 
 .hero-art{min-height:0;padding:10px 0}
