@@ -7,6 +7,7 @@ import { priceCart, requestSchema, settingsSchema, validateEvent } from "@/lib/v
 import { customerSession } from "@/lib/customer";
 import { deliverNotifications } from "@/lib/notifications";
 import { connectRequestChat } from "@/lib/chat";
+import { withCustomCateringCategoryOptions } from "@/lib/custom-catering-options";
 
 export const maxDuration = 240;
 
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
     if (notifications.data.whatsapp_enabled && whatsappBlockers().length) throw new HttpError(503, "The restaurant's notification setup is incomplete. Please contact the team.");
     if (!settingsSchema.safeParse(settings).success) throw new HttpError(503, "Restaurant setup is incomplete. Please contact the restaurant.");
     validateEvent(input, settings);
-    const priced = priceCart(input.items, menu);
+    const priced = priceCart(input.items, menu.map(item => withCustomCateringCategoryOptions(item)));
     const { data, error } = await db.rpc("submit_catering_request", {
       p_key: input.idempotency_key, p_hash: hash, p_customer_id: customer?.user.id ?? null,
       p_payload: {
